@@ -76,7 +76,7 @@ export default function Topics() {
                     className="bg-main px-3 py-1 text-white rounded-md font-medium hover:underline flex items-center"
                     onClick={() => navigate(-1)} // Navigate back
                 >
-                     Back
+                     Go Back
                 </button>
                 <h1 className="text-4xl font-bold text-gray-800 text-center w-full">
                     {location.state?.courseName || "Course Name"}
