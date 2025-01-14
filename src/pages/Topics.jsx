@@ -74,7 +74,7 @@ export default function Topics() {
             <div className="flex items-center justify-between mb-6">
                 <button
                     className="bg-main px-3 py-1 text-white rounded-md font-medium hover:underline flex items-center"
-                    onClick={() => navigate(-1)} // Navigate back
+                    onClick={() => navigate(-1)} 
                 >
                      Go Back
                 </button>

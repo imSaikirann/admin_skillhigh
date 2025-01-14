@@ -44,6 +44,7 @@ const Dashboard = ({ userCount = 500 }) => {
         <h3 className="text-lg font-semibold text-green-700">Total Users</h3>
         <span className="text-3xl font-bold text-green-700">{purchaseData.length}</span>
       </div> */}
+      <h1>Working one it</h1>
 
       {/* Total Purchases Box */}
       <div className="flex items-center justify-between bg-green-50 rounded-lg p-4 mb-8 shadow-md">
