@@ -85,6 +85,10 @@ export default function Courses() {
     setDropdownOpen(dropdownOpen === courseId ? null : courseId);
   };
 
+  const handleOpenTopics = (courseId,courseName)=>{
+    navigate(`/dashboard/topics/${courseId}`, { state: { courseName } })
+  }
+
   return (
     <div>
       <div className="absolute">
@@ -153,7 +157,7 @@ export default function Courses() {
                 <div className="px-6 pt-4 pb-2 space-x-2">
                   <button
                     className="bg-main text-white font-semibold py-2 px-4 rounded"
-                    onClick={() => navigate(`/dashboard/topics/${course.id}`)}
+                    onClick={() => handleOpenTopics(course.id,course.courseName) }
                   >
                     View Details
                   </button>
