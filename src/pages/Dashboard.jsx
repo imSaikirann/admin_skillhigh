@@ -9,7 +9,10 @@ const Dashboard = ({ userCount = 500 }) => {
   useEffect(() => {
     async function fetchPurchases() {
       try {
-        const res = await axios.get('/api/v1/purchaseCourse/purchases');
+        const res = await axios.get('/api/v1/purchase/getAllPurchases',{
+          headers: { "Content-Type": "multipart/form-data","Authorization": `Bearer ${localStorage.getItem('token')}`, },
+          
+        });
         const fetchedData = res.data.map((item) => ({
           course: item.courseName,
           purchases: 1, // Default to 1 purchase per record unless aggregation is handled server-side
