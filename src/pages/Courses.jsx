@@ -23,7 +23,7 @@ export default function Courses() {
         console.log(departmentId);
         const response = await axios.get(`/api/v1/courses/getCoursesByDeptId/${departmentId}`);
         console.log(response);
-        setCourses(response.data.departmentCourses.Course);
+        setCourses(response.data.departmentCourses.courses);
         setAlertMessage(response.data.message);
         setAlertVisible(true);
       } catch (error) {

@@ -41,17 +41,20 @@ export default function Topics() {
                 description: selectedTopic.description,
                 video: selectedTopic.video,
             };
+           
 
-            const response = await axios.put(`/api/v1/courseTopics/updateTopic/${selectedTopic.id}`, updatedTopic);
+            const response = await axios.put('/api/v1/courseTopics/updateTopic', updatedTopic);
+            console.log(response.data)
             setTopics(prevTopics =>
                 prevTopics.map(topic =>
-                    topic.id === selectedTopic.id ? response.data.updatedTopic : topic
+                    topic.id === selectedTopic.id ? response.data.topic : topic
                 )
             );
 
             setIsEditMode(false);
             setSelectedTopic(null);
         } catch (err) {
+            console.log(err)
             setError("An error occurred while updating the topic.");
         }
     };
