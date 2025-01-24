@@ -67,7 +67,7 @@ export default function Mentors() {
             headers: { 'Content-Type': 'multipart/form-data' },
           }
         );
-        console.log('Update Response:', res);
+  
         setAlertMessage(res.data.message);
       } else {
         const res = await axios.post('/api/v1/mentors/addNewMentor', formData, {
@@ -102,7 +102,13 @@ export default function Mentors() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await axios.delete(`/api/v1/mentors/deleteMentor/${id}`);
+      const res = await axios.delete(`/api/v1/mentors/deleteMentor/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
       setAlertMessage(res.data.message);
       setAlertVisible(true);
       fetchMentors();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation,useParams } from "react-router-dom";
+import { useLocation,useParams ,useNavigate} from "react-router-dom";
 
 export default function AddQuiz() {
   const [questionText, setQuestionText] = useState("");
@@ -12,8 +12,8 @@ export default function AddQuiz() {
   const queryParams = new URLSearchParams(location.search);
   const courseId = queryParams.get('courseId');
   const {topicId} =useParams()
+const navigate = useNavigate();
 
-  console.log(topicId)
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
@@ -110,7 +110,16 @@ export default function AddQuiz() {
   };
 
   return (
-    <div className="p-6 sm:pl-80 font-poppins">
+    <div className="p-6 md:pl-80 font-poppins">
+      <div className="flex items-center justify-between mb-6">
+                <button
+                    className="bg-main px-3 py-1 text-white rounded-md font-medium hover:underline flex items-center"
+                    onClick={() => navigate(-1)} 
+                >
+                     Go Back
+                </button>
+               
+            </div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-extrabold text-gray-900">Quiz Management</h1>
         <button
