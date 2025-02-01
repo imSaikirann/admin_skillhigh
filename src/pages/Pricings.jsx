@@ -90,7 +90,7 @@ export default function Pricings() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto font-poppins">
+    <div className="p-6 max-w-3xl mx-auto font-poppins h-screen">
       <h1 className="text-3xl font-bold text-center mb-6">Pricing List</h1>
 
       {/* Button to add a new pricing plan */}
@@ -103,7 +103,7 @@ export default function Pricings() {
 
       {/* Modal for adding a new pricing plan */}
       {showAddPricingModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 className="text-2xl font-bold mb-4">Add New Pricing Plan</h2>
             <div className="mb-4">

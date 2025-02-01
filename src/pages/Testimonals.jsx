@@ -128,7 +128,7 @@ export default function Testimonials() {
   );
 
   const renderTestimonialList = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-poppins sm:pl-80">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-poppins sm:pl-72">
       <h2 className="text-2xl font-semibold mb-4 col-span-full">All Testimonials</h2>
       {loading ? (
         <div className="flex justify-center items-center col-span-full"><Spinner /></div>
@@ -136,10 +136,11 @@ export default function Testimonials() {
         <p className="text-center text-gray-500 col-span-full">No testimonials found</p>
       ) : (
         testimonials.map((testimonial) => (
-          <div key={testimonial.id} className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-xl font-semibold text-gray-800">{testimonial.name}</h3>
-            <p className="text-sm text-gray-600">{testimonial.collageName}</p>
-            <p className="mt-4 text-gray-700">{testimonial.review}</p>
+          <div key={testimonial.id} className="bg-darkColor text-white border border-gray-600
+           shadow-lg rounded-lg p-6">
+            <h3 className="text-xl font-semibold ">{testimonial.name}</h3>
+            <p className="text-sm ">{testimonial.collageName}</p>
+            <p className="mt-4 ">{testimonial.review}</p>
             <div className="mt-6 flex justify-between">
               <button
                 className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600"

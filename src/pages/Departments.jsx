@@ -96,7 +96,7 @@ export default function Departments() {
   };
 
   return (
-    <div className="container mx-auto p-8 pl-0 sm:pl-80 font-poppins">
+    <div className="container  mx-auto p-8 pl-0 sm:pl-72 font-poppins  h-screen">
         <Alert 
                 message={alertMessage} 
                 isVisible={alertVisible} 
@@ -120,7 +120,7 @@ export default function Departments() {
           {departments.map((department) => (
             <div
               key={department.id}
-              className="bg-white shadow-xl rounded-lg p-6 border border-gray-200 relative"
+              className="bg-darkColor text-white  rounded-lg p-6 border border-gray-900 shadow-md relative"
             >
               <h3 className="text-xl font-semibold text-main">{department.departmentName}</h3>
               <p className="text-gray-600 mt-2">{department.description}</p>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../auth/axiosConfig';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import {useNavigateToBack} from '../utils/navigateUtils'
 
 export default function Topics() {
     const [topics, setTopics] = useState([]);
@@ -10,6 +11,7 @@ export default function Topics() {
     const { courseId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
+    const redirectToBack = useNavigateToBack()
 
     useEffect(() => {
         const fetchTopics = async () => {
@@ -72,22 +74,22 @@ export default function Topics() {
     };
 
     return (
-        <div className="container mx-auto p-6 font-poppins sm:pl-80">
+        <div className="container mx-auto p-6 font-poppins sm:pl-72">
             {/* Header Section */}
             <div className="flex items-center justify-between mb-6">
                 <button
-                    className="bg-main px-3 py-1 text-white rounded-md font-medium hover:underline flex items-center"
-                    onClick={() => navigate(-1)} 
+                    className="bg-main px-6 py-2 text-white rounded-md font-medium hover:underline flex items-center"
+                    onClick={() => redirectToBack()} 
                 >
-                     Go Back
+                     Back
                 </button>
-                <h1 className="text-4xl font-bold text-gray-800 text-center w-full">
+                <h1 className="text-4xl font-bold text-white text-center w-full">
                     {location.state?.courseName || "Course Name"}
                 </h1>
             </div>
 
             <div className="flex items-center justify-between mb-8 flex-col sm:flex-row">
-                <h1 className="text-3xl font-bold mb-4 sm:mb-0 text-gray-800">Course Topics</h1>
+                <h1 className="text-3xl font-bold mb-4 sm:mb-0 text-white">Course Topics</h1>
                 <div className="flex flex-wrap gap-4 sm:gap-6 justify-center sm:justify-end w-full sm:w-auto">
                     <button
                         className="bg-main text-white font-semibold py-2 px-4 rounded hover:bg-main-dark transition-colors w-full sm:w-auto"
@@ -169,11 +171,11 @@ export default function Topics() {
                     topics.map((topic, index) => (
                         <div
                             key={topic.id}
-                            className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 min-h-[300px] flex flex-col"
+                            className="bg-darkColor text-white border-2 border-gray-900 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 min-h-[300px] flex flex-col"
                         >
                             <div className="flex-grow">
                                 <h1 className="text-lg font-semibold text-main mb-2">Lesson {index + 1}</h1>
-                                <h2 className="text-2xl font-semibold text-gray-800 mb-4">{topic.title}</h2>
+                                <h2 className="text-2xl font-semibold  mb-4">{topic.title}</h2>
                                 <p className="text-gray-600 mb-4 line-clamp-3">{topic.description}</p>
                             </div>
                             {topic.video && (

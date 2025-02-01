@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../auth/axiosConfig';
 import { useParams } from 'react-router-dom';
+import Alert from '../components/Alert';
+import {useNavigateToBack} from '../utils/navigateUtils'
+
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -10,12 +13,14 @@ export default function Projects() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const { courseId } = useParams();
+ const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+    const redirectToBack = useNavigateToBack()
 
   // Fetch projects by course ID
   const fetchProjectsByCourse = async (courseId) => {
     try {
-      const response = await axios.get(`/api/v1/courseProjects/getProjectByCourseID/${courseId}`);
-
+      const response = await axios.get(`/api/v1/courseProjects/getProjectsForAdmin/${courseId}`);
       setProjects(response.data.projects);
     } catch (error) {
       console.error('Error fetching projects:', error.message);
@@ -23,39 +28,51 @@ export default function Projects() {
   };
 
   // Add or update project
-  const addOrUpdateProject = async () => {
-    if (isEditing && selectedProject) {
-      try {
-        await axios.put(`/api/v1/courseProjects/updateProject/${selectedProject.id}`, { projectName, projectLink });
-        setProjects(projects.map((proj) =>
-          proj.id === selectedProject.id ? { ...proj, projectName, projectLink } : proj
-        ));
-      } catch (error) {
-        console.error('Error updating project:', error.message);
-      }
-    } else {
-      try {
-        const response = await axios.post(`/api/v1/courseProjects/createProject/${courseId}`, {
-          projectName,
-          projectLink,
-        });
-        setProjects([...projects, response.data]);
-      } catch (error) {
-        console.error('Error adding project:', error.message);
-      }
+  // Add or update project
+const addOrUpdateProject = async () => {
+  if (isEditing && selectedProject) {
+    try {
+      await axios.put(`/api/v1/courseProjects/updateProject/${selectedProject.id}`, { projectName, projectLink });
+      setProjects(projects.map((proj) =>
+        proj.id === selectedProject.id ? { ...proj, projectName, projectLink } : proj
+      ));
+      setShowModal(false);  // Only close if successful
+    } catch (error) {
+      const message = error.response?.data?.errors[0]?.message || error.response?.data?.message || "Error updating project.";
+      setAlertMessage(message);
+      setAlertVisible(true);
     }
-    setShowModal(false);
+  } else {
+    try {
+      const response = await axios.post(`/api/v1/courseProjects/createProject/${courseId}`, {
+        projectName,
+        projectLink,
+      });
+      setProjects([...projects, response.data]);
+      setShowModal(false);  
+    } catch (error) {
+      const message = error.response?.data?.errors[0]?.message || error.response?.data?.message || "Error while adding project.";
+      setAlertMessage(message);
+      setAlertVisible(true);
+    }
+  }
+
+  // Reset editing states only if no errors
+  if (!alertVisible) {
     setIsEditing(false);
     setProjectName('');
     setProjectLink('');
-  };
+  }
+};
+
 
   // Delete project
   const deleteProject = async (projectId) => {
     try {
-      await axios.delete(`/api/v1/project/deleteProject/${projectId}`);
+      await axios.delete(`/api/v1/courseProjects/deleteProject/${projectId}`);
       setProjects(projects.filter((proj) => proj.id !== projectId));
     } catch (error) {
+      
       console.error('Error deleting project:', error.message);
     }
   };
@@ -73,8 +90,29 @@ export default function Projects() {
     fetchProjectsByCourse(courseId);
   }, [courseId]);
 
+  const handleAlertClose = () => {
+    setAlertVisible(false);
+  }; 
+
   return (
-    <div className="container mx-auto p-6 px-6 font-poppins sm:pl-80">
+    <div className="container mx-auto p-6 px-6 font-poppins sm:pl-72 h-screen text-white">
+       <div className="absolute ">
+        <Alert 
+          message={alertMessage} 
+          isVisible={alertVisible} 
+          onClose={handleAlertClose} 
+        />
+      </div>
+            {/* Header Section */}
+            <div className="flex items-center justify-between mb-6">
+                <button
+                    className="bg-main px-6 py-2 text-white rounded-md font-medium hover:underline flex items-center"
+                    onClick={() => redirectToBack()} 
+                >
+                     Back
+                </button>
+               
+            </div>
       <header className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-semibold">Projects</h1>
         <button
@@ -91,10 +129,10 @@ export default function Projects() {
       </header>
 
       {/* List of Projects */}
-      <div className="grid grid-cols-1 gap-4 mt-4">
+      <div className="grid grid-cols-1 gap-4 mt-4 ">
         {projects.length > 0 ? (
           projects.map((project) => (
-            <div key={project.id} className="p-6 border rounded-md shadow-md">
+            <div key={project.id} className="p-6 border-gray-900 bg-darkColor rounded-md shadow-md ">
               <h3 className="text-xl font-medium">{project.projectName}</h3>
               <a href={project.projectLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                 View Project
@@ -123,21 +161,21 @@ export default function Projects() {
       {/* Add/Edit Project Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-md p-6 w-96 shadow-lg">
+          <div className="bg-darkColor text-white rounded-md p-6 w-96 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">{isEditing ? 'Edit Project' : 'Add New Project'}</h2>
             <input
               name="projectName"
               placeholder="Project Name"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-darkColor p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <input
               name="projectLink"
               placeholder="Project Link"
               value={projectLink}
               onChange={(e) => setProjectLink(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-darkColor p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <div className="flex justify-end">
               <button

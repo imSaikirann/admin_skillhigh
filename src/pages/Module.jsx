@@ -123,7 +123,7 @@ export default function Module() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-10 px-6 sm:pl-80">
+    <div className="bg-gray-50 min-h-screen py-10 px-6 sm:pl-72">
       <h1 className="text-3xl font-bold text-center mb-8">Course Modules</h1>
 
       <div className="flex justify-end mb-4">

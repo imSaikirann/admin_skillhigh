@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation,useParams ,useNavigate} from "react-router-dom";
+import {useNavigateToBack} from '../utils/navigateUtils'
+
 
 export default function AddQuiz() {
   const [questionText, setQuestionText] = useState("");
@@ -13,6 +15,7 @@ export default function AddQuiz() {
   const courseId = queryParams.get('courseId');
   const {topicId} =useParams()
 const navigate = useNavigate();
+const redirectToBack = useNavigateToBack()
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -110,18 +113,18 @@ const navigate = useNavigate();
   };
 
   return (
-    <div className="p-6 md:pl-80 font-poppins">
+    <div className="p-6 md:pl-72 font-poppins bg-darkColor text-white">
       <div className="flex items-center justify-between mb-6">
                 <button
-                    className="bg-main px-3 py-1 text-white rounded-md font-medium hover:underline flex items-center"
-                    onClick={() => navigate(-1)} 
+                    className="bg-main px-6 py-3 text-white rounded-md font-medium hover:underline flex items-center"
+                    onClick={() => redirectToBack()} 
                 >
-                     Go Back
+                     Back
                 </button>
                
             </div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-extrabold text-gray-900">Quiz Management</h1>
+        <h1 className="text-4xl font-extrabold ">Quiz Management</h1>
         <button
           onClick={handleAddNewQuestion}
           className="px-6 py-2 bg-main text-white rounded-lg shadow-md transition"
@@ -132,8 +135,8 @@ const navigate = useNavigate();
 
       <div className="grid gap-6">
         {/* Quiz Questions Section */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Quiz Questions</h2>
+        <div className=" shadow-lg rounded-lg p-6 ">
+          <h2 className="text-2xl font-semibold ">Quiz Questions</h2>
           {questions.length === 0 ? (
             <div className="text-center text-gray-500 py-4">No questions available</div>
           ) : (
@@ -143,14 +146,14 @@ const navigate = useNavigate();
                 className="border-b py-4 flex justify-between items-start"
               >
                 <div>
-                  <p className="text-lg font-medium text-gray-700 mb-2">
+                  <p className="text-lg font-medium  mb-2">
                     {question.text}
                   </p>
                   <ul className="list-disc pl-5 space-y-1">
                     {question.answers.map((answer, i) => (
                       <li
                         key={i}
-                        className={`text-gray-700 ${answer.isCorrect ? "font-bold" : ""}`}
+                        className={` ${answer.isCorrect ? "font-bold" : ""}`}
                       >
                         {answer.text}
                         {answer.isCorrect && (

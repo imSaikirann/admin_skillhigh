@@ -10,9 +10,13 @@ export default function Contactus() {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await axios.get('/api/v1/contacts/allContacts'); // Adjust the endpoint if needed
-
+        const response = await axios.get('/api/v1/contacts/allContacts',{
+          headers: { "Content-Type": "multipart/form-data","Authorization": `Bearer ${localStorage.getItem('token')}`, },
+          
+        }); // Adjust the endpoint if needed
+        console.log(response)
         if (response.data.success) {
+          
           setContacts(response.data.allContacts); // Assuming `response.data.data` holds the contacts
         } else {
           alert('Failed to load contact data');
@@ -41,7 +45,10 @@ export default function Contactus() {
   const handleDelete = async (id) => {
     try {
       // Send delete request to backend
-      const response = await axios.delete(`/api/v1/contacts/deleteContact/${id}`);
+      const response = await axios.delete(`/api/v1/contacts/deleteContact/${id}`,{
+        headers: { "Content-Type": "multipart/form-data","Authorization": `Bearer ${localStorage.getItem('token')}`, },
+        
+      });
       
       if (response.data.success) {
         // Remove the deleted contact from the state
@@ -62,7 +69,8 @@ export default function Contactus() {
   }
 
   return (
-    <div className="p-8 sm:pl-80">
+    <div className="p-8 sm:pl-72 font-poppins bg-darkColor text-gray-300 h-screen">
+      
       <h2 className="text-2xl font-bold mb-4">Contact Us Messages</h2>
       <table className="min-w-full table-auto">
         <thead>

@@ -131,12 +131,12 @@ export default function Mentors() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 sm:pl-80">
+    <div className="min-h-screen bg-darkColor text-white p-6 sm:pl-72">
       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
       <div className="max-w-6xl mx-auto relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Mentors</h1>
+          <h1 className="text-3xl font-bold ">Mentors</h1>
           <button
             className="bg-main text-white py-2 px-4 rounded-lg shadow-md"
             onClick={() => setIsFormOpen(true)}
@@ -150,7 +150,7 @@ export default function Mentors() {
           {mentors.map((mentor) => (
             <div
               key={mentor.id}
-              className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 "
+              className="bg-darkColor text-white border border-gray-800 shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 "
             >
               <img
                 src={mentor.photo || 'https://via.placeholder.com/150'}
@@ -158,9 +158,9 @@ export default function Mentors() {
                 className="w-80 h-80 object-cover"
               />
               <div className="p-4">
-                <h2 className="text-lg font-bold text-gray-800">{mentor.name}</h2>
-                <p className="text-gray-600">{mentor.qualification}</p>
-                <p className="text-gray-500 text-sm">{mentor.company}</p>
+                <h2 className="text-lg font-bold ">{mentor.name}</h2>
+                <p className="text-white">{mentor.qualification}</p>
+                <p className="text-white text-sm">{mentor.company}</p>
                 <div className="mt-4 flex justify-between">
                   <button
                     className="text-blue-600 hover:text-blue-800"

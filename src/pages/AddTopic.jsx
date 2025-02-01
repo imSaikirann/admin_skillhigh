@@ -52,7 +52,6 @@ export default function AddTopic() {
                 video: '',
             });
         } catch (error) {
-            console.error(error);
             setAlertMessage(error.response?.data?.errors[0].message ||error.response?.data?.message || 'Error while adding topic.');
             setAlertVisible(true);
         } finally {

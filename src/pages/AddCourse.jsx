@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../auth/axiosConfig';
 import { AppContext } from '../store/StoreContext';
 import Alert from '../components/Alert';
-import Spinner from '../components/Spinner';
+import {useNavigateToBack} from '../utils/navigateUtils'
+
 
 export default function AddCourse() {
     const { fetchCourses,   } = useContext(AppContext);
@@ -16,6 +17,7 @@ export default function AddCourse() {
         image: null,
         departmentId: '',
     });
+   const redirectToBack = useNavigateToBack()
 
     const [imageName, setImageName] = useState('');
     const [alertVisible, setAlertVisible] = useState(false);
@@ -83,18 +85,31 @@ export default function AddCourse() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg font-poppins">
+        <div className='p-8 sm:pl-72 font-poppins'>
+               {/* Header Section */}
+         <div className="flex items-center justify-between mb-6">
+                <button
+                    className="bg-main px-6 py-3 text-white rounded-md font-medium hover:underline flex items-center"
+                    onClick={() => redirectToBack()} 
+                >
+                     Back
+                </button>
+               
+            </div>
+            <div className="max-w-2xl mx-auto p-8 bg-darkColor text-white rounded-lg font-poppins h-screen">
             <Alert
                 message={alertMessage}
                 isVisible={alertVisible}
                 onClose={handleAlertClose}
             />
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">Add New Course</h2>
+
+         
+            <h2 className="text-2xl font-semibold mb-6 ">Add New Course</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               
                 {/* Course Title */}
                 <div>
-                    <label className="block text-gray-600 font-medium mb-1" htmlFor="courseName">
+                    <label className="block  font-medium mb-1" htmlFor="courseName">
                         Course Title
                     </label>
                     <input
@@ -110,7 +125,7 @@ export default function AddCourse() {
 
                 {/* Course Description */}
                 <div>
-                    <label className="block text-gray-600 font-medium mb-1" htmlFor="courseDescription">
+                    <label className="block  font-medium mb-1" htmlFor="courseDescription">
                         Course Description
                     </label>
                     <textarea
@@ -127,7 +142,7 @@ export default function AddCourse() {
 
                 {/* Number of Lessons */}
                 <div>
-                    <label className="block text-gray-600 font-medium mb-1" htmlFor="courseCount">
+                    <label className="block  font-medium mb-1" htmlFor="courseCount">
                         Number of Lessons
                     </label>
                     <input
@@ -143,7 +158,7 @@ export default function AddCourse() {
 
                 {/* Image Upload */}
                 <div>
-                    <label className="block text-gray-600 font-medium mb-1">Upload Course Image</label>
+                    <label className="block  font-medium mb-1">Upload Course Image</label>
                     <div className="flex items-center justify-center w-full">
                         <label
                             htmlFor="image"
@@ -187,5 +202,7 @@ export default function AddCourse() {
                 </div>
             </form>
         </div>
+        </div>
+      
     );
 }

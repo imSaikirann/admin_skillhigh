@@ -104,11 +104,11 @@ export default function FAQs() {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:pl-80 font-poppins">
+    <div className="container mx-auto p-4 sm:pl-72 font-poppins text-white">
       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
       <h2 className="text-2xl font-bold mb-4">FAQs</h2>
 
-      <form onSubmit={handleSubmit} className="mb-6">
+      <form onSubmit={handleSubmit} className="mb-6 text-darkColor">
         <input
           type="text"
           placeholder="Question"

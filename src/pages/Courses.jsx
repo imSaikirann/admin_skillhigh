@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../auth/axiosConfig";
-import Spinner from "../components/Spinner";
+import {useNavigateToBack} from '../utils/navigateUtils'
 import Alert from '../components/Alert';
-import EditCourseModal from "../pages/EditCourseModal"; // Import modal component
+import EditCourseModal from "../pages/EditCourseModal"; 
 
 
 export default function Courses() {
   const { departmentId } = useParams();
   const navigate = useNavigate();
+  const redirectToBack = useNavigateToBack()
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [dropdownOpen, setDropdownOpen] = useState(null); // Track the open state of each dropdown
+  const [dropdownOpen, setDropdownOpen] = useState(null); 
 
   // Fetch courses by department ID
   useEffect(() => {
@@ -22,7 +23,6 @@ export default function Courses() {
       try {
         console.log(departmentId);
         const response = await axios.get(`/api/v1/courses/getCoursesByDeptId/${departmentId}`);
-        console.log(response);
         setCourses(response.data.departmentCourses.courses);
         setAlertMessage(response.data.message);
         setAlertVisible(true);
@@ -99,7 +99,18 @@ export default function Courses() {
         />
       </div>
 
-      <div className="p-8 sm:pl-80 font-poppins">
+      <div className="p-8 sm:pl-72 font-poppins">
+         {/* Header Section */}
+         <div className="flex items-center justify-between mb-6">
+                <button
+                    className="bg-main px-6 py-3 text-white rounded-md font-medium hover:underline flex items-center"
+                    onClick={() => redirectToBack()} 
+                >
+                     Back
+                </button>
+               
+            </div>
+            
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-semibold">Courses</h1>
           <button
@@ -110,10 +121,10 @@ export default function Courses() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-6">
           {courses.length > 0 ? (
             courses.map((course) => (
-              <div key={course.id} className="max-w-sm rounded overflow-hidden shadow-sm bg-main bg-opacity-5 relative">
+              <div key={course.id} className="max-w-sm  rounded overflow-hidden shadow-sm bg-darkColor text-white border-2 border-gray-900 relative">
                 <img
                   className="w-full h-auto object-cover"
                   src={course.courseThumbnail}

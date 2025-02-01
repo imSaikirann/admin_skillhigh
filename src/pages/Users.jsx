@@ -3,6 +3,7 @@ import axios from '../auth/axiosConfig';
 import { AppContext } from '../store/StoreContext';
 import Spinner from '../components/Spinner';
 import Alert from '../components/Alert';
+import {useNavigateToBack} from '../utils/navigateUtils'
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -13,6 +14,8 @@ export default function Users() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
   const { loading, setLoading } = useContext(AppContext);
+    const redirectToBack = useNavigateToBack()
+  
   const [newUser, setNewUser] = useState({
     email: '',
     phone: '',
@@ -147,7 +150,7 @@ export default function Users() {
     setAlertVisible(false);
   };
   return (
-    <div className="container mx-auto p-6 px-6 sm:pl-80 font-poppins">
+    <div className="container mx-auto p-6 px-6 sm:pl-72 font-poppins">
       <div>
         <Alert
           message={alertMessage}
@@ -155,7 +158,16 @@ export default function Users() {
           onClose={handleAlertClose}
         />
       </div>
-
+ {/* Header Section */}
+ <div className="flex items-center justify-between mb-6 ">
+                <button
+                    className="bg-main px-6 py-2 text-white rounded-md font-medium hover:underline flex items-center"
+                    onClick={() => redirectToBack()} 
+                >
+                     Back
+                </button>
+               
+            </div>
       <header className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-semibold">Users</h1>
         <button
@@ -166,8 +178,8 @@ export default function Users() {
         </button>
       </header>
 
-      <div className="mb-6 p-4 bg-white shadow rounded-md flex justify-between items-center">
-        <div className="text-lg font-semibold text-gray-800">
+      <div className="mb-6 p-4 bg-darkColor border border-gray-700 text-white shadow rounded-md flex justify-between items-center">
+        <div className="text-lg font-semibold ">
           Total Users: <span className="text-main">{users.length}</span>
         </div>
 
@@ -177,13 +189,13 @@ export default function Users() {
             placeholder="Search users by email or course..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-96 px-4 py-2 border border-gray-300 rounded-md focus:ring-main focus:border-main"
+            className="w-96 text-darkColor  px-4 py-3 rounded-md "
           />
         </div>
       </div>
 
       {/* Users Table */}
-      <div className="relative overflow-x-auto p-8">
+      <div className="relative overflow-x-auto p-8 ">
         {loading ? (
           <Spinner />
         ) : (
@@ -201,7 +213,7 @@ export default function Users() {
             <tbody>
               {currentUsers.length > 0 ? (
                 currentUsers.map((user, index) => (
-                  <tr key={index} className="bg-white border-b text-black">
+                  <tr key={index} className="bg-darkColor border border-gray-800 text-white">
                     <td className="px-6 py-4">{user.email}</td>
                     <td className="px-6 py-4">{user.phoneNumber}</td>
                     <td className="px-6 py-4">{user.courseName}</td>
