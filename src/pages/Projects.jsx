@@ -32,11 +32,13 @@ export default function Projects() {
 const addOrUpdateProject = async () => {
   if (isEditing && selectedProject) {
     try {
-      await axios.put(`/api/v1/courseProjects/updateProject/${selectedProject.id}`, { projectName, projectLink });
+     const response =  await axios.put(`/api/v1/courseProjects/updateProject/${selectedProject.id}`, { projectName, projectLink });
       setProjects(projects.map((proj) =>
         proj.id === selectedProject.id ? { ...proj, projectName, projectLink } : proj
       ));
-      setShowModal(false);  // Only close if successful
+      setShowModal(false);  
+      setAlertMessage(response?.data.message);
+      setAlertVisible(true);
     } catch (error) {
       const message = error.response?.data?.errors[0]?.message || error.response?.data?.message || "Error updating project.";
       setAlertMessage(message);
@@ -50,6 +52,8 @@ const addOrUpdateProject = async () => {
       });
       setProjects([...projects, response.data]);
       setShowModal(false);  
+      setAlertMessage(response?.data.message);
+      setAlertVisible(true);
     } catch (error) {
       const message = error.response?.data?.errors[0]?.message || error.response?.data?.message || "Error while adding project.";
       setAlertMessage(message);
@@ -69,8 +73,10 @@ const addOrUpdateProject = async () => {
   // Delete project
   const deleteProject = async (projectId) => {
     try {
-      await axios.delete(`/api/v1/courseProjects/deleteProject/${projectId}`);
+      const response = await axios.delete(`/api/v1/courseProjects/deleteProject/${projectId}`);
       setProjects(projects.filter((proj) => proj.id !== projectId));
+      setAlertMessage(response?.data.message);
+      setAlertVisible(true);
     } catch (error) {
       
       console.error('Error deleting project:', error.message);

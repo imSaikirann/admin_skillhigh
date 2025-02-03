@@ -185,13 +185,13 @@ const redirectToBack = useNavigateToBack()
 
         {/* Add/Edit Question Form */}
         {editMode && (
-          <div className="bg-white shadow-lg rounded-lg p-6">
+          <div className="bg-darkColor text-black shadow-lg rounded-lg p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
+              <h2 className="text-2xl font-semibold text-white">
                 {questionToEditId ? "Edit Question" : "Add Question"}
               </h2>
               <div>
-                <label className="block text-gray-600 mb-2">Question:</label>
+                <label className="block text-white  mb-2">Question:</label>
                 <textarea
                   value={questionText}
                   onChange={handleQuestionChange}
@@ -201,7 +201,7 @@ const redirectToBack = useNavigateToBack()
                 ></textarea>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-700">Answers:</h3>
+                <h3 className="text-lg font-semibold text-white">Answers:</h3>
                 {answers.map((answer, index) => (
                   <div key={index} className="flex gap-4 items-center mb-3">
                     <textarea
@@ -222,7 +222,7 @@ const redirectToBack = useNavigateToBack()
                           handleAnswerChange(index, "isCorrect", e.target.checked)
                         }
                       />
-                      <span className="text-gray-600">Correct</span>
+                      <span className="text-main">Correct</span>
                     </label>
                     <button
                       type="button"
