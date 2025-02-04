@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../auth/axiosConfig';
 import Alert from '../components/Alert';
-import Spinner from '../components/Spinner';
+
 
 export default function Mentors() {
   const [mentors, setMentors] = useState([]);
@@ -52,8 +52,6 @@ export default function Mentors() {
     formData.append('company', form.company || '');
     if (form.photo) formData.append('photo', form.photo);
 
-    console.log('Form State:', form);
-    console.log('FormData Content:');
     for (let pair of formData.entries()) {
       console.log(pair[0] + ':', pair[1]);
     }
@@ -76,7 +74,7 @@ export default function Mentors() {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        console.log('Add Response:', res);
+   
         setAlertMessage(res.data.message);
       }
       setAlertVisible(true);

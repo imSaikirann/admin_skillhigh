@@ -6,18 +6,23 @@ import Alert from '../components/Alert';
 export default function Testimonials() {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ name: '', collageName: '', review: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    collageName: '',
+    review: '',
+    stars: '',
+    collageLogo: null,
+  });
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const token = localStorage.getItem('token');
   const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  
+  const [alertMessage, setAlertMessage] = useState('');
+  const token = localStorage.getItem('token');
+
   const fetchTestimonials = async () => {
     setLoading(true);
     try {
       const response = await axios.get('/api/v1/testimonals/allTestimonals');
-      console.log(response)
       setTestimonials(response.data.allTestimonals);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
@@ -35,26 +40,37 @@ export default function Testimonials() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleInputChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prev) => ({ ...prev, collageLogo: file }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const data = new FormData();
+      for (const key in formData) {
+        if (formData[key]) data.append(key, formData[key]);
+      }
+
       if (editingId) {
-        await axios.put(`/api/v1/testimonals/updateTesimonal/${editingId}`, formData, {
-          headers: { Authorization: `Bearer ${token}` },
+        const res = await axios.put(`/api/v1/testimonals/updateTesimonal/${editingId}`, data, {
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
         });
-  
+        setAlertMessage(res.data.message);
+        setAlertVisible(true);
       } else {
-       const res =  await axios.post('/api/v1/testimonals/createTestimonal', formData, {
-          headers: { Authorization: `Bearer ${token}` },
+        const res = await axios.post('/api/v1/testimonals/createTestimonal', data, {
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
         });
-        
         setAlertMessage(res.data.message);
         setAlertVisible(true);
       }
-      setFormData({ name: '', collageName: '', review: '' });
+
+      setFormData({ name: '', collageName: '', review: '', stars: '', collageLogo: null });
       setEditingId(null);
-      setShowForm(false); 
-      fetchTestimonials(); 
+      setShowForm(false);
+      fetchTestimonials();
     } catch (error) {
       console.error('Error submitting testimonial:', error);
       alert('Error submitting testimonial');
@@ -63,12 +79,12 @@ export default function Testimonials() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await axios.delete(`/api/v1/testimonals/deleteTestimonal/${id}`,{
+      const res = await axios.delete(`/api/v1/testimonals/deleteTestimonal/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAlertMessage(res.data.message);
       setAlertVisible(true);
-      fetchTestimonials(); 
+      fetchTestimonials();
     } catch (error) {
       console.error('Error deleting testimonial:', error);
       alert('Error deleting testimonial');
@@ -81,9 +97,9 @@ export default function Testimonials() {
 
   const renderForm = () => (
     <div className="bg-white shadow-lg rounded-lg p-6 mb-8 w-full max-w-lg mx-auto font-poppins">
-       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
+      <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
       <h2 className="text-2xl font-semibold text-center mb-4">{editingId ? 'Edit Testimonial' : 'Add Testimonial'}</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
         <div>
           <label htmlFor="name" className="block text-sm font-semibold text-gray-700">Name</label>
           <input
@@ -120,6 +136,29 @@ export default function Testimonials() {
             required
           />
         </div>
+        <div>
+          <label htmlFor="stars" className="block text-sm font-semibold text-gray-700">Stars</label>
+          <input
+            id="stars"
+            name="stars"
+            type="number"
+            min="1"
+            max="5"
+            value={formData.stars}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Photo</label>
+          <input
+            type="file"
+            name="collageLogo"
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 p-2 rounded-lg"
+          />
+        </div>
         <div className="flex justify-end">
           <button type="submit" className="px-6 py-2 bg-main text-white rounded-lg hover:bg-main-dark">Submit</button>
         </div>
@@ -129,6 +168,8 @@ export default function Testimonials() {
 
   const renderTestimonialList = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-poppins sm:pl-72">
+      <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
+
       <h2 className="text-2xl font-semibold mb-4 col-span-full">All Testimonials</h2>
       {loading ? (
         <div className="flex justify-center items-center col-span-full"><Spinner /></div>
@@ -136,18 +177,25 @@ export default function Testimonials() {
         <p className="text-center text-gray-500 col-span-full">No testimonials found</p>
       ) : (
         testimonials.map((testimonial) => (
-          <div key={testimonial.id} className="bg-darkColor text-white border border-gray-600
-           shadow-lg rounded-lg p-6">
-            <h3 className="text-xl font-semibold ">{testimonial.name}</h3>
-            <p className="text-sm ">{testimonial.collageName}</p>
-            <p className="mt-4 ">{testimonial.review}</p>
+          <div key={testimonial.id} className="bg-darkColor text-white border border-gray-600 shadow-lg rounded-lg p-6">
+            <h3 className="text-xl font-semibold">{testimonial.name}</h3>
+            <p className="text-sm">{testimonial.collageName}</p>
+            <p className="mt-4">{testimonial.review}</p>
+            <p className="mt-4">Rating : {testimonial.stars}</p>
+            <img className='w-16 h-16 rounded-full' src={testimonial.collageLogo}></img>
             <div className="mt-6 flex justify-between">
               <button
                 className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600"
                 onClick={() => {
                   setEditingId(testimonial.id);
-                  setFormData({ name: testimonial.name, collageName: testimonial.collageName, review: testimonial.review });
-                  setShowForm(true); // Open form when editing
+                  setFormData({
+                    name: testimonial.name,
+                    collageName: testimonial.collageName,
+                    review: testimonial.review,
+                    stars: testimonial.stars,
+                    collageLogo: null,
+                  });
+                  setShowForm(true);
                 }}
               >
                 Edit
@@ -167,18 +215,13 @@ export default function Testimonials() {
 
   return (
     <div className="p-8">
-      {/* Add Testimonial button */}
       <button
         className="fixed top-8 right-8 bg-main text-white p-4 rounded-full shadow-lg hover:bg-main-dark transition"
-        onClick={() => setShowForm(true)} // Show form when clicked
+        onClick={() => setShowForm(true)}
       >
         + Add Testimonial
       </button>
-
-      {/* Conditionally render the form */}
       {showForm && renderForm()}
-
-      {/* Render the list of testimonials */}
       {renderTestimonialList()}
     </div>
   );
