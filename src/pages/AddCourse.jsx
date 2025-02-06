@@ -96,7 +96,7 @@ export default function AddCourse() {
                 </button>
                
             </div>
-            <div className="max-w-2xl mx-auto p-8 bg-darkColor text-white rounded-lg font-poppins h-screen">
+            <div className="max-w-2xl mx-auto p-8 bg-white text-darkColor  dark:bg-darkColor dark:text-white border dark:border-darkColor rounded-lg font-poppins h-screen">
             <Alert
                 message={alertMessage}
                 isVisible={alertVisible}
@@ -119,7 +119,7 @@ export default function AddCourse() {
                         value={formData.courseName}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
+                        className="w-full  border-darkColor bg-white dark:bg-darkBg dark:text-white px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
                     />
                 </div>
 
@@ -135,7 +135,7 @@ export default function AddCourse() {
                         onChange={handleChange}
                         required
                         rows="4"
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
+                        className="w-full  border-darkColor bg-white dark:bg-darkBg dark:text-white  px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
                     ></textarea>
                 </div>
 
@@ -152,7 +152,7 @@ export default function AddCourse() {
                         value={formData.courseCount}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
+                        className="w-full  border-darkColor bg-white dark:bg-darkBg dark:text-white  px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
                     />
                 </div>
 

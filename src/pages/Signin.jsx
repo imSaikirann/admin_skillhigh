@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import axios from "../auth/axiosConfig";
 import { AppContext } from "../store/StoreContext";
 import { useNavigate } from "react-router-dom";
-import Logo from '../assets/logo.jpg';
+import Logo from '../assets/logo.png';
 
 export default function Signin() {
   const [email, setEmail] = useState("");

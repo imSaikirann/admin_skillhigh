@@ -129,7 +129,7 @@ export default function Mentors() {
   };
 
   return (
-    <div className="min-h-screen bg-darkColor text-white p-6 sm:pl-72">
+    <div className="min-h-screen bg-white  dark:bg-darkColor text-darkColor dark:text-white p-6 sm:pl-72">
       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
       <div className="max-w-6xl mx-auto relative">
         {/* Header */}
@@ -148,17 +148,17 @@ export default function Mentors() {
           {mentors.map((mentor) => (
             <div
               key={mentor.id}
-              className="bg-darkColor text-white border border-gray-800 shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 "
+              className="bg-white dark:bg-darkBg text-darkColor dark:text-white  shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 "
             >
               <img
                 src={mentor.photo || 'https://via.placeholder.com/150'}
                 alt={mentor.name}
                 className="w-80 h-80 object-cover"
               />
-              <div className="p-4">
+              <div className="p-4 text-darkColor dark:text-white ">
                 <h2 className="text-lg font-bold ">{mentor.name}</h2>
-                <p className="text-white">{mentor.qualification}</p>
-                <p className="text-white text-sm">{mentor.company}</p>
+                <p className="">{mentor.qualification}</p>
+                <p className=" text-sm">{mentor.company}</p>
                 <div className="mt-4 flex justify-between">
                   <button
                     className="text-blue-600 hover:text-blue-800"

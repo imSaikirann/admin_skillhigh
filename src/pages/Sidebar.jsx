@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../assets/logo.jpg';
+import Logo from '../assets/logo.png';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
+import { SunIcon, MoonIcon } from '../assets/icons/icons'
+import { ThemeContext } from '../store/ThemeContext';
 
 export default function Sidebar() {
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
+  
   // For dropdown menus inside the sidebar
   const [openDropdown, setOpenDropdown] = React.useState(null);
   // Shared sidebar state used for both mobile and desktop versions.
@@ -36,9 +40,8 @@ export default function Sidebar() {
         </div>
         {/* Mobile Sidebar (slides in/out) */}
         <div
-          className={`fixed top-0 left-0 h-full w-72 bg-darkColor text-white border-r-2 font-poppins transition-transform transform ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } z-50 flex flex-col`}
+          className={`fixed top-0 left-0 h-full w-72bg-green-50  bg-white text-darkColor dark:bg-darkBg dark:text-white  border-r-2 dark:border-darkColor   font-poppins transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            } z-50 flex flex-col`}
         >
           <div className="flex justify-end p-4">
             <button onClick={toggleSidebar}>
@@ -164,14 +167,21 @@ export default function Sidebar() {
               )}
             </div>
           </nav>
+          <div className='p-5 '>
+        <button
+      onClick={() => setDarkMode(!darkMode)}
+      className= " bg-gray-200 dark:bg-darkColor dark:text-white p-3 rounded-full"
+    >
+      {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+    </button>
+        </div>
         </div>
       </div>
 
       {/* ========= DESKTOP SIDEBAR ========= */}
       <div
-        className={`hidden md:flex fixed top-0 left-0 h-full bg-darkColor text-white border-r-2 border-gray-900 font-poppins transition-all duration-300 flex-col ${
-          isSidebarOpen ? 'w-64' : 'w-16'
-        }`}
+        className={`hidden md:flex fixed top-0 left-0 h-full bg-green-50  text-darkColor dark:bg-darkBg dark:text-white  border-r-2 dark:border-darkColor font-poppins rounded-r-3xl transition-all duration-300 flex-col ${isSidebarOpen ? 'w-64' : 'w-16'
+          }`}
       >
         {/* Desktop Toggle Button inside Sidebar */}
         <div className="p-4">
@@ -197,14 +207,14 @@ export default function Sidebar() {
           <Link
             to="/"
             className="rounded-md p-2 whitespace-nowrap"
-            onClick={() => {}}
+            onClick={() => { }}
           >
             {isSidebarOpen ? 'Admin Dashboard' : 'AD'}
           </Link>
           <Link
             to="/contactus"
             className="rounded-md p-2 whitespace-nowrap"
-            onClick={() => {}}
+            onClick={() => { }}
           >
             {isSidebarOpen ? 'New Students' : 'NS'}
           </Link>
@@ -223,7 +233,7 @@ export default function Sidebar() {
                 <Link
                   to="/dashboard/departments"
                   className="text-main p-2 rounded-md"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   Departments
                 </Link>
@@ -245,28 +255,28 @@ export default function Sidebar() {
                 <Link
                   to="/website/faq"
                   className="text-main p-2 rounded-md"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   FAQS
                 </Link>
                 <Link
                   to="/website/mentors"
                   className="text-main p-2 rounded-md"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   Mentors
                 </Link>
                 <Link
                   to="/reviews"
                   className="text-main p-2 rounded-md"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   Testimonials
                 </Link>
                 <Link
                   to="/website/pricing"
                   className="text-main p-2 rounded-md"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   Pricing
                 </Link>
@@ -288,7 +298,7 @@ export default function Sidebar() {
                 <Link
                   to="/dashboard/users"
                   className="text-main p-2 rounded-md"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   View Users
                 </Link>
@@ -316,8 +326,17 @@ export default function Sidebar() {
               </div>
             )}
           </div>
+
+
         </nav>
-        
+        <div className='p-5 '>
+        <button
+      onClick={() => setDarkMode(!darkMode)}
+      className= " bg-gray-200 dark:bg-darkColor dark:text-white p-3 rounded-full"
+    >
+      {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+    </button>
+        </div>
       </div>
     </>
   );

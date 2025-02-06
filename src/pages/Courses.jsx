@@ -91,7 +91,7 @@ export default function Courses() {
 
   return (
     <div>
-      <div className="absolute">
+      <div className="absolute z-50">
         <Alert 
           message={alertMessage} 
           isVisible={alertVisible} 
@@ -112,7 +112,7 @@ export default function Courses() {
             </div>
             
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-semibold">Courses</h1>
+          <h1 className="text-3xl font-semibold text-darkColor dark:text-white ">Courses</h1>
           <button
             className="bg-main text-white font-semibold py-2 px-4 rounded"
             onClick={() => navigate(`/dashboard/addcourses/${departmentId}`)}
@@ -121,10 +121,10 @@ export default function Courses() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6">
           {courses.length > 0 ? (
             courses.map((course) => (
-              <div key={course.id} className="max-w-sm  rounded overflow-hidden shadow-sm bg-darkColor text-white border-2 border-gray-900 relative">
+              <div key={course.id} className="max-w-md  rounded overflow-hidden shadow-sm bg-white dark:bg-darkColor text-white border-2 dark:border-darkColor relative">
                 <img
                   className="w-full h-auto object-cover"
                   src={course.courseThumbnail}

@@ -104,7 +104,7 @@ export default function FAQs() {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:pl-72 font-poppins text-white">
+    <div className="container mx-auto p-4 sm:pl-72 font-poppins text-darkColor dark:text-white  ">
       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
       <h2 className="text-2xl font-bold mb-4">FAQs</h2>
 
@@ -114,15 +114,15 @@ export default function FAQs() {
           placeholder="Question"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          className="border p-2 w-full mb-4"
+          className="border border-darkColor bg-white dark:bg-darkColor dark:text-white p-2 rounded-md w-full mb-4"
         />
         <textarea
           placeholder="Answer"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
-          className="border p-2 w-full mb-4"
+          className="border border-darkColor bg-white dark:bg-darkColor dark:text-white  rounded-md p-2 w-full mb-4"
         />
-        <button type="submit" className="bg-main text-white p-2 rounded">
+        <button type="submit" className="bg-main  text-white p-2 rounded">
           {editMode ? "Update FAQ" : "Add FAQ"}
         </button>
       </form>

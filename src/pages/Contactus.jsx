@@ -6,18 +6,17 @@ export default function Contactus() {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch data from the backend on component mount
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await axios.get('/api/v1/contacts/allContacts',{
-          headers: { "Content-Type": "multipart/form-data","Authorization": `Bearer ${localStorage.getItem('token')}`, },
-          
-        }); // Adjust the endpoint if needed
-        console.log(response)
+        const response = await axios.get('/api/v1/contacts/allContacts', {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         if (response.data.success) {
-          
-          setContacts(response.data.allContacts); // Assuming `response.data.data` holds the contacts
+          setContacts(response.data.allContacts);
         } else {
           alert('Failed to load contact data');
         }
@@ -25,34 +24,24 @@ export default function Contactus() {
         console.error('Error fetching contacts:', error);
         alert('Error fetching contact data');
       } finally {
-        setLoading(false); // Set loading to false once data is fetched or error occurs
+        setLoading(false);
       }
     };
 
     fetchContacts();
   }, []);
 
-  // Handle the case where the contacts data is still loading or empty
-  if (loading) {
-    return (
-      <div className='flex items-center justify-center h-screen'>
-        <Spinner />
-      </div>
-    );
-  }
-
-  // Function to handle delete
   const handleDelete = async (id) => {
     try {
-      // Send delete request to backend
-      const response = await axios.delete(`/api/v1/contacts/deleteContact/${id}`,{
-        headers: { "Content-Type": "multipart/form-data","Authorization": `Bearer ${localStorage.getItem('token')}`, },
-        
+      const response = await axios.delete(`/api/v1/contacts/deleteContact/${id}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
-      
+
       if (response.data.success) {
-        // Remove the deleted contact from the state
-        setContacts(contacts.filter(contact => contact.id !== id));
+        setContacts(contacts.filter((contact) => contact.id !== id));
         alert('Contact deleted successfully');
       } else {
         alert('Failed to delete contact');
@@ -63,45 +52,56 @@ export default function Contactus() {
     }
   };
 
-  // If no contacts were found
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
   if (contacts.length === 0) {
     return <p className="text-center mt-8">No messages found</p>;
   }
 
   return (
-    <div className="p-8 sm:pl-72 font-poppins bg-darkColor text-gray-300 h-screen">
-      
-      <h2 className="text-2xl font-bold mb-4">Contact Us Messages</h2>
-      <table className="min-w-full table-auto">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 border">Name</th>
-            <th className="px-4 py-2 border">Email</th>
-            <th className="px-4 py-2 border">Phone</th>
-            <th className="px-4 py-2 border">Message</th>
-            <th className="px-4 py-2 border">Actions</th> {/* Added Actions column */}
-          </tr>
-        </thead>
-        <tbody>
-          {contacts.map((contact) => (
-            <tr key={contact.id}>
-              <td className="px-4 py-2 border">{contact.name}</td>
-              <td className="px-4 py-2 border">{contact.email}</td>
-              <td className="px-4 py-2 border">{contact.phone}</td>
-              <td className="px-4 py-2 border">{contact.message}</td>
-              <td className="px-4 py-2 border">
-                {/* Delete Button */}
-                <button
-                  onClick={() => handleDelete(contact.id)}
-                  className="text-red-500 hover:text-red-700 font-semibold"
-                >
-                  Delete
-                </button>
-              </td>
+    <div className="p-8 sm:pl-72 font-poppins bg-white text-darkColor dark:bg-darkColor dark:text-gray-300 min-h-screen">
+      <h2 className="text-3xl font-bold mb-6 text-center">Contact Us Messages</h2>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white  text-darkColor dark:text-secondary dark:bg-darkColor shadow-md rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-primaryColor">
+              <th className="px-6 py-4 text-left text-sm font-medium ">Name</th>
+              <th className="px-6 py-4 text-left text-sm font-medium ">Email</th>
+              <th className="px-6 py-4 text-left text-sm font-medium ">Phone</th>
+              <th className="px-6 py-4 text-left text-sm font-medium ">Message</th>
+              <th className="px-6 py-4 text-left text-sm font-medium ">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {contacts.map((contact) => (
+              <tr
+                key={contact.id}
+                className="border-b border-gray-200 hover:bg-lightColor"
+              >
+                <td className="px-6 py-4 text-sm text-darkColor dark:text-gray-300">{contact.name}</td>
+                <td className="px-6 py-4 text-sm text-darkColor dark:text-gray-300">{contact.email}</td>
+                <td className="px-6 py-4 text-sm text-darkColor dark:text-gray-300">{contact.phone}</td>
+                <td className="px-6 py-4 text-sm text-darkColor dark:text-gray-300">{contact.message}</td>
+                <td className="px-6 py-4 text-sm">
+                  <button
+                    onClick={() => handleDelete(contact.id)}
+                    className="text-red-600 hover:text-red-800 font-semibold focus:outline-none"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

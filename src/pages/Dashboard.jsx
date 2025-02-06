@@ -41,7 +41,7 @@ const Dashboard = ({ userCount = 500 }) => {
   }, []);
 
   return (
-    <div className="bg-darkColor text-white rounded-lg p-6 m-4 font-poppins sm:md-0 md:ml-80 h-screen">
+    <div className= "bg-white dark:bg-darkColor text-white rounded-lg p-6 m-4 font-poppins sm:md-0 md:ml-80 h-screen">
       {/* Users Box
       <div className="flex items-center justify-between bg-green-100 rounded-lg p-4 mb-8 shadow-md">
         <h3 className="text-lg font-semibold text-green-700">Total Users</h3>
@@ -50,9 +50,9 @@ const Dashboard = ({ userCount = 500 }) => {
       
 
       {/* Total Purchases Box */}
-      <div className="flex items-center justify-between bg-green-50 rounded-lg p-4 mb-8 shadow-md">
-        <h3 className="text-lg font-semibold text-main">Total Purchases</h3>
-        <span className="text-3xl font-bold text-main">{totalPurchases}</span>
+      <div className="flex items-center text-main justify-between bg-green-50 dark:bg-darkBg dark:text-white rounded-lg p-4 mb-8 shadow-md">
+        <h3 className="text-lg font-semibold ">Total Purchases</h3>
+        <span className="text-3xl font-bold ">{totalPurchases}</span>
       </div>
 
       {/* Course Purchases Chart */}

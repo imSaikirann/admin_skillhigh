@@ -96,7 +96,7 @@ export default function Testimonials() {
   };
 
   const renderForm = () => (
-    <div className="bg-white shadow-lg rounded-lg p-6 mb-8 w-full max-w-lg mx-auto font-poppins">
+    <div className="bg-white dark:bg-darkColor text-darkBg dark:text-white shadow-lg rounded-lg p-6 mb-8 w-full max-w-lg mx-auto font-poppins">
       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
       <h2 className="text-2xl font-semibold text-center mb-4">{editingId ? 'Edit Testimonial' : 'Add Testimonial'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
@@ -167,7 +167,7 @@ export default function Testimonials() {
   );
 
   const renderTestimonialList = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-poppins sm:pl-72">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-poppins sm:pl-72 bg-white dark:bg-darkColor text-darkBg dark:text-white">
       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
 
       <h2 className="text-2xl font-semibold mb-4 col-span-full">All Testimonials</h2>
