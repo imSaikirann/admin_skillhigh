@@ -124,7 +124,7 @@ export default function Courses() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6">
           {courses.length > 0 ? (
             courses.map((course) => (
-              <div key={course.id} className="max-w-md  rounded overflow-hidden shadow-sm bg-white dark:bg-darkColor text-white border-2 dark:border-darkColor relative">
+              <div key={course.id} className="max-w-md  rounded overflow-hidden shadow-sm bg-white dark:bg-darkColor text-white  border-2 dark:border-darkColor relative">
                 <img
                   className="w-full h-auto object-cover"
                   src={course.courseThumbnail}
@@ -132,7 +132,7 @@ export default function Courses() {
                 />
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{course.courseName}</div>
-                  <p className="text-gray-700 text-base">
+                  <p className="text-dark dark:text-white text-base">
                     {course.courseDescription.length > 100
                       ? `${course.courseDescription.slice(0, 97)}...`
                       : course.courseDescription}
@@ -149,11 +149,11 @@ export default function Courses() {
                   </button>
                   
                   {dropdownOpen === course.id && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-10">
+                    <div className="absolute right-0 mt-2 w-48 bg-white text-darkColor dark:bg-darkBg dark:text-whiteshadow-lg rounded-lg z-10">
                       <ul className="py-2">
                         <li>
                           <button
-                            className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
+                            className="block px-4 py-2 bg-white text-darkColor dark:bg-darkBg dark:text-white"
                             onClick={() => handleEdit(course)}
                           >
                             Edit

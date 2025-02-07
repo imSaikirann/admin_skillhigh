@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid } from 'recharts';
 import axios from '../auth/axiosConfig';
 
-const Dashboard = ({ userCount = 500 }) => {
+const Dashboard = () => {
   const [purchaseData, setPurchaseData] = useState([]);
   const [totalPurchases, setTotalPurchases] = useState(0);
+  const [topSellingCourse, setTopSellingCourse] = useState({});
+  const [lowestSellingCourse, setLowestSellingCourse] = useState({});
+  const [mediumSellingCourse, setMediumSellingCourse] = useState({});
 
   useEffect(() => {
     async function fetchPurchases() {
       try {
-        const res = await axios.get('/api/v1/purchase/getAllPurchases',{
-          headers: { "Content-Type": "multipart/form-data","Authorization": `Bearer ${localStorage.getItem('token')}`, },
-          
+        const res = await axios.get('/api/v1/purchase/getAllPurchases', {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
         });
+
+        // Mapping data to have course and purchase count
         const fetchedData = res.data.map((item) => ({
           course: item.courseName,
-          purchases: 1, // Default to 1 purchase per record unless aggregation is handled server-side
+          purchases: 1,
         }));
 
-        // Aggregate purchases by course
+        // Aggregating purchases by course
         const aggregatedData = fetchedData.reduce((acc, current) => {
           const existing = acc.find((item) => item.course === current.course);
           if (existing) {
@@ -29,9 +36,20 @@ const Dashboard = ({ userCount = 500 }) => {
           return acc;
         }, []);
 
+        // Calculate total purchases
         const total = aggregatedData.reduce((sum, item) => sum + item.purchases, 0);
         setTotalPurchases(total);
         setPurchaseData(aggregatedData);
+
+        // Sorting data to get the top, lowest, and medium selling courses
+        aggregatedData.sort((a, b) => a.purchases - b.purchases);
+        
+        setTopSellingCourse(aggregatedData[aggregatedData.length - 1]); // Top-selling (max purchases)
+        setLowestSellingCourse(aggregatedData[0]); // Lowest-selling (min purchases)
+        
+        // Medium-selling course (if there is an odd number of courses, it's the middle one, else the average of the two middle ones)
+        const middleIndex = Math.floor(aggregatedData.length / 2);
+        setMediumSellingCourse(aggregatedData[middleIndex]);
       } catch (error) {
         console.error('Error fetching purchases:', error);
       }
@@ -41,48 +59,75 @@ const Dashboard = ({ userCount = 500 }) => {
   }, []);
 
   return (
-    <div className= "bg-white dark:bg-darkColor text-white rounded-lg p-6 m-4 font-poppins sm:md-0 md:ml-80 h-screen">
-      {/* Users Box
-      <div className="flex items-center justify-between bg-green-100 rounded-lg p-4 mb-8 shadow-md">
-        <h3 className="text-lg font-semibold text-green-700">Total Users</h3>
-        <span className="text-3xl font-bold text-green-700">{purchaseData.length}</span>
-      </div> */}
-      
-
-      {/* Total Purchases Box */}
-      <div className="flex items-center text-main justify-between bg-green-50 dark:bg-darkBg dark:text-white rounded-lg p-4 mb-8 shadow-md">
-        <h3 className="text-lg font-semibold ">Total Purchases</h3>
-        <span className="text-3xl font-bold ">{totalPurchases}</span>
+    <div className="bg-white dark:bg-darkColor text-white rounded-lg p-6 m-4 font-poppins sm:md-0 md:ml-72 overflow-hidden">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-primary">Dashboard</h1>
+       
       </div>
 
-      {/* Course Purchases Chart */}
-      <h2 className="text-2xl font-semibold text-primary mb-4">Course Purchases</h2>
-      <ResponsiveContainer width="100%" height={560}>
-        <BarChart data={purchaseData} layout="vertical" margin={{ left: 30, right: 30 }}>
-          <XAxis type="number" />
-          <YAxis
-            dataKey="course"
-            type="category"
-            width={200}
-            tick={{ fontSize: 14, fill: '#0D8267' }} // Custom color for Y-axis labels
-          />
-          <Tooltip formatter={(value) => [value, "Purchases"]} />
-          <Legend />
-          <Bar
-            dataKey="purchases"
-            fill="url(#primaryGradient)"
-            name="Purchases"
-            label={{ position: 'right', fill: '#0D8267', fontSize: 14, fontWeight: 'bold' }} // Highlight purchase numbers
-          />
-          <defs>
-            {/* Gradient color fill for bars */}
-            <linearGradient id="primaryGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#0D8267" />
-              <stop offset="100%" stopColor="#0D8267" />
-            </linearGradient>
-          </defs>
-        </BarChart>
-      </ResponsiveContainer>
+      {/* Total Purchases Box */}
+      <div className="bg-gradient-to-r from-green-800 to-teal-500 p-6 rounded-2xl shadow-xl mb-8 flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-semibold text-white">Total Purchases</h3>
+          <p className="text-3xl font-bold text-white">{totalPurchases}</p>
+        </div>
+      </div>
+
+      {/* Cards for Top, Lowest, and Medium Selling Courses */}
+      <div className="grid grid-col-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Top-selling course */}
+        <div className="bg-gradient-to-r from-green-400 to-green-950  p-6 rounded-2xl shadow-xl text-center">
+          <h4 className="text-lg font-semibold text-white">Top Selling Course</h4>
+          <p className="text-xl font-bold text-white">{topSellingCourse.course}</p>
+          <p className="text-sm text-white">{topSellingCourse.purchases} Purchases</p>
+        </div>
+
+        {/* Lowest-selling course */}
+        <div className="bg-gradient-to-r from-red-400 to-red-950  p-6 rounded-2xl shadow-xl text-center">
+          <h4 className="text-lg font-semibold text-white">Lowest Selling Course</h4>
+          <p className="text-xl font-bold text-white">{lowestSellingCourse.course}</p>
+          <p className="text-sm text-white">{lowestSellingCourse.purchases} Purchases</p>
+        </div>
+
+        {/* Medium-selling course */}
+        <div className="bg-gradient-to-r from-blue-400 to-blue-950 p-6 rounded-2xl  shadow-xl text-center">
+          <h4 className="text-lg font-semibold text-white">Medium Selling Course</h4>
+          <p className="text-xl font-bold text-white">{mediumSellingCourse.course}</p>
+          <p className="text-sm text-white">{mediumSellingCourse.purchases} Purchases</p>
+        </div>
+      </div>
+
+      {/* Course Purchases Bar Chart */}
+      <h2 className="text-2xl font-semibold text-primary mb-6">Course Purchases</h2>
+      <div className="bg-white dark:bg-darkBg p-6 rounded-lg shadow-xl mb-8">
+        <ResponsiveContainer width="100%" height={400}>
+          <BarChart data={purchaseData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            {/* X-Axis */}
+            <XAxis dataKey="course" tick={{ fontSize: 12, fontWeight: 'bold' }} />
+            {/* Y-Axis */}
+            <YAxis tick={{ fontSize: 12, fontWeight: 'bold' }} />
+            {/* Tooltip formatter */}
+            <Tooltip 
+              content={({ payload }) => {
+                if (payload && payload.length > 0) {
+                  const { course, purchases } = payload[0].payload;
+                  return (
+                    <div className="custom-tooltip text-darkColor dark:text-white bg-gray-50 dark:bg-darkColor p-3 rounded-lg">
+                      <p className="label">{course}</p>
+                      <p className="desc">{`${purchases} Purchases`}</p>
+                    </div>
+                  );
+                }
+                return null;
+              }}
+            />
+            <Legend />
+            <Bar dataKey="purchases" fill="#0D8267" barSize={30} radius={[10, 10, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

@@ -136,10 +136,10 @@ export default function Departments() {
                   className="text-gray-500 cursor-pointer"
                 />
                 {dropdownVisible === department.id && (
-                  <div className="absolute right-0 mt-2 w-24 bg-white border border-gray-300 rounded-lg shadow-lg">
+                  <div className="absolute right-0 mt-2 w-24 bg-white text-darkColor dark:bg-darkBg dark:text-white border rounded-lg shadow-lg">
                     <button
-                      onClick={() => handleEdit(department)}
-                      className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                      onClick={() => handleEdit(department)} 
+                      className="block w-full px-4 py-2 text-left "
                     >
                       Edit
                     </button>
@@ -156,8 +156,8 @@ export default function Departments() {
 
       {/* Add/Edit Department Modal */}
       {showFormModal && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg max-w-sm w-full">
+        <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white dark:bg-darkBg dark:text-white p-6 rounded-lg max-w-sm w-full shadow-md">
             <h2 className="text-2xl font-semibold mb-4">
               {isEditing ? 'Edit Department' : 'Add New Department'}
             </h2>
@@ -168,7 +168,7 @@ export default function Departments() {
                   type="text"
                   value={departmentName}
                   onChange={(e) => setDepartmentName(e.target.value)}
-                  className="w-full border border-gray-300 p-2 rounded"
+                  className="w-full border border-darkColor bg-white dark:bg-darkColor dark:text-white p-2 rounded"
                   required
                 />
               </div>
@@ -177,7 +177,7 @@ export default function Departments() {
                 <button
                   type="button"
                   onClick={() => setShowFormModal(false)}
-                  className="py-2 px-4 bg-gray-400 text-white rounded"
+                  className="py-2 px-4 bg-white text-darkColor rounded"
                 >
                   Cancel
                 </button>

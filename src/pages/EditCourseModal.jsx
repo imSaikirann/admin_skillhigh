@@ -39,8 +39,8 @@ function EditCourseModal({ course, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded shadow-lg w-96">
+    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white text-darkColor  dark:bg-darkColor dark:text-white border dark:border-darkColor p-6 rounded shadow-lg w-96">
         <h2 className="text-xl font-semibold mb-4">Edit Course</h2>
         <form onSubmit={handleSubmit}>
           {/* Course Name */}
@@ -57,7 +57,7 @@ function EditCourseModal({ course, onClose, onSave }) {
               name="courseName"
               value={formData.courseName}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-main"
+              className="w-full px-4 py-2 border border-darkColor bg-white dark:bg-darkBg dark:text-white  rounded focus:outline-none focus:ring focus:border-main"
               required
             />
           </div>
@@ -76,7 +76,7 @@ function EditCourseModal({ course, onClose, onSave }) {
               value={formData.courseDescription}
               onChange={handleInputChange}
               rows="4"
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-main"
+              className="w-full px-4 py-2 border border-darkColor bg-white dark:bg-darkBg dark:text-white  rounded focus:outline-none focus:ring focus:border-main"
               required
             ></textarea>
           </div>
@@ -95,7 +95,7 @@ function EditCourseModal({ course, onClose, onSave }) {
               name="courseThumbnail"
               accept="image/*"
               onChange={handleFileChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-main"
+              className="w-full px-4 py-2 border border-darkColor bg-white dark:bg-darkBg dark:text-white  rounded focus:outline-none focus:ring focus:border-main"
             />
           </div>
 

@@ -123,7 +123,7 @@ export default function Module() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-10 px-6 sm:pl-72">
+    <div className="bg-white   dark:bg-darkColor dark:text-white border dark:border-darkColor min-h-screen py-10 px-6 sm:pl-72">
       <h1 className="text-3xl font-bold text-center mb-8">Course Modules</h1>
 
       <div className="flex justify-end mb-4">
@@ -142,7 +142,7 @@ export default function Module() {
           {modules.map((module, index) => (
             <div
               key={module.id}
-              className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300 relative"
+              className="border border-darkColor bg-white dark:bg-darkBg dark:text-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300 relative"
             >
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold mb-2">
@@ -219,7 +219,7 @@ export default function Module() {
       {/* Module Modal */}
       {moduleModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-96">
+          <div className="bg-white text-darkColor dark:bg-darkBg dark:text-white p-6 rounded-md shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">
               {editingModuleId ? 'Edit Module' : 'Add Module'}
             </h2>
@@ -230,7 +230,7 @@ export default function Module() {
                   type="text"
                   value={moduleName}
                   onChange={(e) => setModuleName(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md"
+                  className="w-full  border-darkColor bg-white dark:bg-darkBg dark:text-white px-3 py-2 border rounded-md"
                   required
                 />
               </div>

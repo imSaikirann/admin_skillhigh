@@ -177,7 +177,7 @@ export default function Testimonials() {
         <p className="text-center text-gray-500 col-span-full">No testimonials found</p>
       ) : (
         testimonials.map((testimonial) => (
-          <div key={testimonial.id} className="bg-darkColor text-white border border-gray-600 shadow-lg rounded-lg p-6">
+          <div key={testimonial.id} className=" text-darkColor bg-white dark:bg-darkColor dark:text-white border border-gray-600 shadow-lg rounded-lg p-6">
             <h3 className="text-xl font-semibold">{testimonial.name}</h3>
             <p className="text-sm">{testimonial.collageName}</p>
             <p className="mt-4">{testimonial.review}</p>

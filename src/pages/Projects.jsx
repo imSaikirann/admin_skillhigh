@@ -138,7 +138,7 @@ const addOrUpdateProject = async () => {
       <div className="grid grid-cols-1 gap-4 mt-4 ">
         {projects.length > 0 ? (
           projects.map((project) => (
-            <div key={project.id} className="p-6 border-gray-900 bg-darkColor rounded-md shadow-md ">
+            <div key={project.id} className="p-6 text-darkColor border-darkColor bg-white dark:bg-darkBg dark:text-white rounded-md shadow-md ">
               <h3 className="text-xl font-medium">{project.projectName}</h3>
               <a href={project.projectLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                 View Project
@@ -167,21 +167,21 @@ const addOrUpdateProject = async () => {
       {/* Add/Edit Project Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-darkColor text-white rounded-md p-6 w-96 shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">{isEditing ? 'Edit Project' : 'Add New Project'}</h2>
+          <div className="bg-white   dark:bg-darkColor dark:text-white border dark:border-darkColor text-white rounded-md p-6 w-96 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4 text-darkColor dark:text-white">{isEditing ? 'Edit Project' : 'Add New Project'}</h2>
             <input
               name="projectName"
               placeholder="Project Name"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
-              className="w-full text-darkColor p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-darkColor  bg-white dark:bg-darkBg dark:text-white p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <input
               name="projectLink"
               placeholder="Project Link"
               value={projectLink}
               onChange={(e) => setProjectLink(e.target.value)}
-              className="w-full text-darkColor p-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-darkColor border-darkColor bg-white dark:bg-darkBg dark:text-white p-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <div className="flex justify-end">
               <button

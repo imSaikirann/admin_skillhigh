@@ -64,13 +64,13 @@ export default function AddTopic() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg font-poppins">
+        <div className="max-w-2xl mx-auto p-8 bg-white   dark:bg-darkColor dark:text-white border dark:border-darkColor rounded-lg font-poppins h-screen">
             <Alert
                 message={alertMessage}
                 isVisible={alertVisible}
                 onClose={handleAlertClose}
             />
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">Add New Topic</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-white">Add New Topic</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Topic Title */}
                 <div>
@@ -84,7 +84,7 @@ export default function AddTopic() {
                         value={formData.title}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
+                        className="w-full px-4 py-2 border border-darkColor bg-white dark:bg-darkBg dark:text-white rounded-md focus:outline-none focus:border-green-600"
                     />
                 </div>
 
@@ -100,7 +100,7 @@ export default function AddTopic() {
                         onChange={handleChange}
                         required
                         rows="4"
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
+                        className="w-full px-4 py-2 border border-darkColor bg-white dark:bg-darkBg dark:text-white rounded-md focus:outline-none focus:border-green-600"
                     ></textarea>
                 </div>
 
@@ -117,7 +117,7 @@ export default function AddTopic() {
                         onChange={handleChange}
                         required
                         placeholder="https://example.com/presentation.pptx"
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
+                        className="w-full border-darkColor bg-white dark:bg-darkBg dark:text-white px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
                     />
                 </div>
 
@@ -134,7 +134,7 @@ export default function AddTopic() {
                         onChange={handleChange}
                         required
                         placeholder="https://iframe.mediadelivery.net/play/123456/abcde12345"
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-600"
+                        className="w-full px-4 py-2 border-darkColor bg-white dark:bg-darkBg dark:text-white border rounded-md focus:outline-none focus:border-green-600"
                     />
                 </div>
 
