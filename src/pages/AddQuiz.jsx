@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation,useParams ,useNavigate} from "react-router-dom";
-import {useNavigateToBack} from '../utils/navigateUtils'
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useNavigateToBack } from '../utils/navigateUtils'
 
 
 export default function AddQuiz() {
@@ -13,9 +13,9 @@ export default function AddQuiz() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const courseId = queryParams.get('courseId');
-  const {topicId} =useParams()
-const navigate = useNavigate();
-const redirectToBack = useNavigateToBack()
+  const { topicId } = useParams()
+  const navigate = useNavigate();
+  const redirectToBack = useNavigateToBack()
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -113,25 +113,17 @@ const redirectToBack = useNavigateToBack()
   };
 
   return (
-    <div className="p-6 md:pl-72 font-poppins bg-darkColor text-white">
+    <div className="p-6 md:pl-72 font-poppins bg-white text-darkBg dark:bg-darkColor dark:text-white">
       <div className="flex items-center justify-between mb-6">
-                <button
-                    className="bg-main px-6 py-3 text-white rounded-md font-medium hover:underline flex items-center"
-                    onClick={() => redirectToBack()} 
-                >
-                     Back
-                </button>
-               
-            </div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-extrabold ">Quiz Management</h1>
         <button
-          onClick={handleAddNewQuestion}
-          className="px-6 py-2 bg-main text-white rounded-lg shadow-md transition"
+          className="bg-main px-6 py-3 text-white rounded-md font-medium hover:underline flex items-center"
+          onClick={() => redirectToBack()}
         >
-          Add New Question
+          Back
         </button>
+
       </div>
+     
 
       <div className="grid gap-6">
         {/* Quiz Questions Section */}
@@ -185,18 +177,18 @@ const redirectToBack = useNavigateToBack()
 
         {/* Add/Edit Question Form */}
         {editMode && (
-          <div className="bg-darkColor text-black shadow-lg rounded-lg p-6">
+          <div className="dark:bg-darkColor text-black bg-white dark:text-white shadow-lg rounded-lg p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <h2 className="text-2xl font-semibold text-white">
+              <h2 className="text-2xl font-semiboldt text-darkColor dark:text-white">
                 {questionToEditId ? "Edit Question" : "Add Question"}
               </h2>
               <div>
-                <label className="block text-white  mb-2">Question:</label>
+                <label className="block text-dark dark:text-white  mb-2">Question:</label>
                 <textarea
                   value={questionText}
                   onChange={handleQuestionChange}
                   required
-                  className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300"
+                  className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring  border-darkColor bg-white dark:bg-darkBg dark:text-white "
                   rows="3"
                 ></textarea>
               </div>
@@ -211,13 +203,14 @@ const redirectToBack = useNavigateToBack()
                         handleAnswerChange(index, "text", e.target.value)
                       }
                       required
-                      className="flex-grow px-3 py-2 border rounded-lg shadow-sm"
+                      className="flex-grow  border-darkColor bg-white dark:bg-darkBg dark:text-white  px-3 py-2 border rounded-lg shadow-sm"
                       rows="2"
                     ></textarea>
                     <label className="flex items-center space-x-2">
                       <input
                         type="checkbox"
                         checked={answer.isCorrect}
+                        className=" border-darkColor bg-white dark:bg-darkBg dark:text-white "
                         onChange={(e) =>
                           handleAnswerChange(index, "isCorrect", e.target.checked)
                         }
@@ -250,6 +243,15 @@ const redirectToBack = useNavigateToBack()
             </form>
           </div>
         )}
+         <div className="flex justify-between items-center mb-6">
+       
+        <button
+          onClick={handleAddNewQuestion}
+          className="px-6 py-2 bg-main text-white rounded-lg shadow-md transition"
+        >
+          Add New Question
+        </button>
+      </div>
       </div>
     </div>
   );

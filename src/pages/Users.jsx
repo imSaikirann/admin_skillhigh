@@ -18,10 +18,9 @@ export default function Users() {
 
   const [newUser, setNewUser] = useState({
     email: '',
-    phone: '',
+    phoneNumber: '',
     courseName: '',
     amount: '',
-    using: 'NO',
   });
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -90,7 +89,7 @@ export default function Users() {
           email: newUser.email,
           courseId: newUser.courseName,
           amount: parseFloat(newUser.amount),
-          phone: newUser.phone,
+          phoneNumber: newUser.phoneNumber,
         }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
@@ -99,7 +98,7 @@ export default function Users() {
 
           fetchUsers();
           setShowForm(false);
-          setNewUser({ email: '', phone: '', courseName: '', amount: '' });
+          setNewUser({ email: '', phoneNumber: '', courseName: '', amount: '' });
         }
       } else {
 
@@ -107,7 +106,7 @@ export default function Users() {
           email: newUser.email,
           courseId: newUser.courseName,
           amount: parseFloat(newUser.amount),
-          phone: newUser.phone,
+          phoneNumber: newUser.phoneNumber,
         }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
@@ -116,7 +115,7 @@ export default function Users() {
           fetchUsers();
           setShowForm(false);
 
-          setNewUser({ email: '', phone: '', courseName: '', amount: '' });
+          setNewUser({ email: '', phoneNumber: '', courseName: '', amount: '' });
           setAlertMessage(response.data.message)
           setAlertVisible(true)
         }
@@ -311,8 +310,8 @@ export default function Users() {
               <input
                 type="text"
                 placeholder="Phone"
-                value={newUser.phone}
-                onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                value={newUser.phoneNumber}
+                onChange={(e) => setNewUser({ ...newUser, phoneNumber: e.target.value })}
                 className="w-full px-4 py-2 mb-3 border border-darkColor bg-white dark:bg-darkColor dark:text-white rounded-md"
                 required
               />

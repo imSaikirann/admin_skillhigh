@@ -101,43 +101,43 @@ export default function Testimonials() {
       <h2 className="text-2xl font-semibold text-center mb-4">{editingId ? 'Edit Testimonial' : 'Add Testimonial'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
         <div>
-          <label htmlFor="name" className="block text-sm font-semibold text-gray-700">Name</label>
+          <label htmlFor="name" className="block text-sm font-semibold text-darkColor dark:text-white">Name</label>
           <input
             id="name"
             name="name"
             type="text"
             value={formData.name}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
+            className="w-full p-3 border-darkColor bg-white dark:bg-darkBg dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
             required
           />
         </div>
         <div>
-          <label htmlFor="collageName" className="block text-sm font-semibold text-gray-700">College Name</label>
+          <label htmlFor="collageName" className="block text-sm font-semiboldtext-darkColor dark:text-white">College Name</label>
           <input
             id="collageName"
             name="collageName"
             type="text"
             value={formData.collageName}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
+            className="w-full p-3 border-darkColor bg-white dark:bg-darkBg dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
             required
           />
         </div>
         <div>
-          <label htmlFor="review" className="block text-sm font-semibold text-gray-700">Review</label>
+          <label htmlFor="review" className="block text-sm font-semibold text-darkColor dark:text-white">Review</label>
           <textarea
             id="review"
             name="review"
             value={formData.review}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
+            className="w-full p-3 border-darkColor bg-white dark:bg-darkBg dark:text-whiterounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
             rows="4"
             required
           />
         </div>
         <div>
-          <label htmlFor="stars" className="block text-sm font-semibold text-gray-700">Stars</label>
+          <label htmlFor="stars" className="block text-sm font-semibold text-darkColor dark:text-white">Stars</label>
           <input
             id="stars"
             name="stars"
@@ -146,17 +146,17 @@ export default function Testimonials() {
             max="5"
             value={formData.stars}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
+            className="w-full p-3 border-darkColor bg-white dark:bg-darkBg dark:text-whiterounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-main"
             required
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Photo</label>
+          <label className="block text-darkColor dark:text-whitemb-2">Photo</label>
           <input
             type="file"
             name="collageLogo"
             onChange={handleInputChange}
-            className="w-full border border-gray-300 p-2 rounded-lg"
+            className="w-full border-darkColor bg-white dark:bg-darkBg dark:text-white p-2 rounded-lg"
           />
         </div>
         <div className="flex justify-end">
@@ -167,7 +167,7 @@ export default function Testimonials() {
   );
 
   const renderTestimonialList = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-poppins sm:pl-72 bg-white dark:bg-darkColor text-darkBg dark:text-white">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 font-poppins sm:pl-72 bg-white dark:bg-darkBg text-darkBg dark:text-white">
       <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
 
       <h2 className="text-2xl font-semibold mb-4 col-span-full">All Testimonials</h2>
