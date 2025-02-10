@@ -33,7 +33,6 @@ export const useNavigateToProjects = () => {
   return (courseId,courseName) => {
 
     if (!courseId || !courseName) {
-      console.warn('Invalid courseId:', courseId); // Log invalid courseId for debugging
       navigate('/'); 
       return;
     }

@@ -18,7 +18,7 @@ import Signin from "./pages/Signin";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import Module from "./pages/Module";
 import Pricings from "./pages/Pricings";
-
+import Careers from "./pages/Careers";
 
 function App() {
   const isUser = localStorage.getItem("token");
@@ -76,6 +76,8 @@ function App() {
                   <Route path="/reviews" element={<Testimonals />} />
                   <Route path="/website/mentors" element={<Mentors />} />
                   <Route path="/website/pricing" element={<Pricings />} />
+                  <Route path="/website/careers" element={<Careers />} />
+
                   
                 </Routes>
               </ProtectedRoutes>

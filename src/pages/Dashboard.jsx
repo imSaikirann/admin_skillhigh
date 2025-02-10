@@ -61,8 +61,8 @@ const Dashboard = () => {
   return (
     <div className="bg-white dark:bg-darkColor text-white rounded-lg p-6 m-4 font-poppins sm:md-0 md:ml-72 overflow-hidden">
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-primary">Dashboard</h1>
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
        
       </div>
 

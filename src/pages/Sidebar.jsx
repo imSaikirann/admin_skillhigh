@@ -120,6 +120,13 @@ export default function Sidebar() {
                   >
                     Pricing
                   </Link>
+                  <Link
+                    to="/website/careers"
+                    className="text-main p-2 rounded-md"
+                    onClick={closeSidebar}
+                  >
+                    Careers
+                  </Link>
                 </div>
               )}
             </div>
@@ -280,6 +287,13 @@ export default function Sidebar() {
                 >
                   Pricing
                 </Link>
+                <Link
+                    to="/website/careers"
+                    className="text-main p-2 rounded-md"
+                    onClick={() => { }}
+                  >
+                    Careers
+                  </Link>
               </div>
             )}
           </div>
