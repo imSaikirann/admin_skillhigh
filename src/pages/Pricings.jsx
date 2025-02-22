@@ -49,6 +49,7 @@ export default function Pricings() {
         `/api/v1/pricings/addPricingFeatures/${selectedPlan.pricingId}`,
         newFeature
       );
+      conssole.log(res)
       if (res.data.success) {
         // Refresh the features list after adding a new feature
         const updatedFeatures = await axios.get(`/api/v1/pricings/features/${selectedPlan.pricingId}`);

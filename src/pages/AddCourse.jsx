@@ -70,7 +70,7 @@ export default function AddCourse() {
 
             fetchCourses();
         } catch (error) {
-            console.log(error)
+       
             setAlertMessage(error.response?.data?.message || "Error while adding course.");
             setAlertVisible(true);
         } finally {

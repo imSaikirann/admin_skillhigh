@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import axios from '../auth/axiosConfig';
 import Alert from '../components/Alert';
-
+import { AppContext } from '../store/StoreContext';
 
 export default function Mentors() {
-  const [mentors, setMentors] = useState([]);
   const [form, setForm] = useState({
     id: null,
     name: '',
@@ -12,21 +11,14 @@ export default function Mentors() {
     company: '',
     photo: null,
   });
+  const { loading, setLoading,mentors ,fetchMentors} = useContext(AppContext);
+
   const [isEdit, setIsEdit] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
-  // Fetch Mentors
-  const fetchMentors = async () => {
-    try {
-      const response = await axios.get('/api/v1/mentors/getAllMentors');
-      setMentors(response.data.mentors);
-    } catch (error) {
-      console.error('Error fetching mentors:', error);
-    }
-  };
 
   useEffect(() => {
     fetchMentors();
@@ -62,10 +54,12 @@ export default function Mentors() {
           `/api/v1/mentors/updateMentor/${form.id}`,
           formData,
           {
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: { 
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
           }
         );
-  
         setAlertMessage(res.data.message);
       } else {
         const res = await axios.post('/api/v1/mentors/addNewMentor', formData, {

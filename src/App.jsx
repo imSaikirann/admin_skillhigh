@@ -19,6 +19,7 @@ import ProtectedRoutes from "./pages/ProtectedRoutes";
 import Module from "./pages/Module";
 import Pricings from "./pages/Pricings";
 import Careers from "./pages/Careers";
+import MentorsMangement from "./pages/MentorsMangement";
 
 function App() {
   const isUser = localStorage.getItem("token");
@@ -67,7 +68,7 @@ function App() {
                     element={<Projects />}
                   />
                    <Route
-                    path="//dashboard/courses/modules/:courseId"
+                    path="/dashboard/courses/modules/:courseId"
                     element={<Module/>}
                   />
                   <Route path="/dashboard/users" element={<Users />} />
@@ -77,8 +78,7 @@ function App() {
                   <Route path="/website/mentors" element={<Mentors />} />
                   <Route path="/website/pricing" element={<Pricings />} />
                   <Route path="/website/careers" element={<Careers />} />
-
-                  
+                  <Route path="/control_center/mentors_managment" element={<MentorsMangement />} />
                 </Routes>
               </ProtectedRoutes>
             }

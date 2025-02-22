@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from '../auth/axiosConfig';
-import { AppContext } from '../store/StoreContext';
+
 import Spinner from '../components/Spinner';
 import Alert from '../components/Alert';
 import { useNavigateToBack } from '../utils/navigateUtils'
+import { AppContext } from '../store/StoreContext';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [showDropdown, setShowDropdown] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(7);
-  const { loading, setLoading } = useContext(AppContext);
+  const { loading, setLoading,courses ,fetchCourses} = useContext(AppContext);
   const redirectToBack = useNavigateToBack()
 
   const [newUser, setNewUser] = useState({
@@ -39,22 +39,10 @@ export default function Users() {
     }
   }
   useEffect(() => {
-
+    fetchCourses()
     fetchUsers();
   }, []);
 
-
-  useEffect(() => {
-    async function fetchCourses() {
-      try {
-        const res = await axios.get('/api/v1/courses/allCourses');
-        setCourses(res.data.allCourses);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchCourses();
-  }, []);
 
   const filteredUsers = users.filter(
     (user) =>

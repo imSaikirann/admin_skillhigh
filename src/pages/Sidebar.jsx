@@ -8,7 +8,7 @@ import { ThemeContext } from '../store/ThemeContext';
 
 export default function Sidebar() {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
-  
+
   // For dropdown menus inside the sidebar
   const [openDropdown, setOpenDropdown] = React.useState(null);
   // Shared sidebar state used for both mobile and desktop versions.
@@ -175,13 +175,13 @@ export default function Sidebar() {
             </div>
           </nav>
           <div className='p-5 '>
-        <button
-      onClick={() => setDarkMode(!darkMode)}
-      className= " bg-gray-200 dark:bg-darkColor dark:text-white p-3 rounded-full"
-    >
-      {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
-    </button>
-        </div>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className=" bg-gray-200 dark:bg-darkColor dark:text-white p-3 rounded-full"
+            >
+              {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -216,7 +216,7 @@ export default function Sidebar() {
             className="rounded-md p-2 whitespace-nowrap"
             onClick={() => { }}
           >
-            {isSidebarOpen ? 'Admin Dashboard' : 'AD'}
+            {isSidebarOpen ? 'Dashboard' : 'AD'}
           </Link>
           <Link
             to="/contactus"
@@ -225,6 +225,27 @@ export default function Sidebar() {
           >
             {isSidebarOpen ? 'New Students' : 'NS'}
           </Link>
+           {/* Website Dashboard Dropdown */}
+           <div className="relative">
+            <button
+              onClick={() => handleDropdownToggle('controlcenter')}
+              className="rounded-md p-2 w-full text-left flex justify-between items-center"
+            >
+              {isSidebarOpen ? 'Control Center ' : 'CC'}
+              <span>{openDropdown === 'controlcenter' ? '-' : '+'}</span>
+            </button>
+            {openDropdown === 'controlcenter' && isSidebarOpen && (
+              <div className="flex flex-col bg-main bg-opacity-10 rounded-md p-2 mt-1">
+                <Link
+                  to="/control_center/mentors_managment"
+                  className="text-main p-2 rounded-md"
+                  onClick={() => { }}
+                >
+                  Mentoring
+                </Link>
+              </div>
+            )}
+          </div>
 
           {/* Courses Dropdown */}
           <div className="relative">
@@ -288,12 +309,12 @@ export default function Sidebar() {
                   Pricing
                 </Link>
                 <Link
-                    to="/website/careers"
-                    className="text-main p-2 rounded-md"
-                    onClick={() => { }}
-                  >
-                    Careers
-                  </Link>
+                  to="/website/careers"
+                  className="text-main p-2 rounded-md"
+                  onClick={() => { }}
+                >
+                  Careers
+                </Link>
               </div>
             )}
           </div>
@@ -344,12 +365,12 @@ export default function Sidebar() {
 
         </nav>
         <div className='p-5 '>
-        <button
-      onClick={() => setDarkMode(!darkMode)}
-      className= " bg-gray-200 dark:bg-darkColor dark:text-white p-3 rounded-full"
-    >
-      {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
-    </button>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className=" bg-gray-200 dark:bg-darkColor dark:text-white p-3 rounded-full"
+          >
+            {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+          </button>
         </div>
       </div>
     </>
