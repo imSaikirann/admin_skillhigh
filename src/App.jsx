@@ -20,6 +20,7 @@ import Module from "./pages/Module";
 import Pricings from "./pages/Pricings";
 import Careers from "./pages/Careers";
 import MentorsMangement from "./pages/MentorsMangement";
+import QuestionsHub from "./pages/QuestionsHub";
 
 function App() {
   const isUser = localStorage.getItem("token");
@@ -70,6 +71,10 @@ function App() {
                    <Route
                     path="/dashboard/courses/modules/:courseId"
                     element={<Module/>}
+                  />
+                   <Route
+                    path="/control_center/questions_hub"
+                    element={<QuestionsHub/>}
                   />
                   <Route path="/dashboard/users" element={<Users />} />
                   <Route path="/website/faq" element={<FAQs />} />

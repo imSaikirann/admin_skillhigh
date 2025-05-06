@@ -231,9 +231,9 @@ export default function Mentors() {
                 <button
                   type="submit"
                   className="w-full bg-main text-white py-2 rounded-lg"
-                  disabled={loading}
+                  disabled={!loading}
                 >
-                  {isEdit ? 'Update Mentor' : loading ? 'Adding Mentor...' : 'Add Mentor'}
+                  {isEdit ? 'Update Mentor' : !loading ? 'Adding Mentor...' : 'Add Mentor'}
                 </button>
               </form>
             </div>

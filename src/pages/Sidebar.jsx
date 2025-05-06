@@ -243,6 +243,13 @@ export default function Sidebar() {
                 >
                   Mentoring
                 </Link>
+                <Link
+                  to="/control_center/questions_hub"
+                  className="text-main p-2 rounded-md"
+                  onClick={() => { }}
+                >
+                 Questions Hub
+                </Link>
               </div>
             )}
           </div>
