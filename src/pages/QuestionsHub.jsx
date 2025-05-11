@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import Alert from '../components/Alert';
-import { getAllUserQuestions, verifyUserQuestion, deleteUserQuestion } from '../services/userQuestionServices';
+import {
+  getAllUserQuestions,
+  verifyUserQuestion,
+  deleteUserQuestion,
+} from '../services/userQuestionServices';
 
 export default function QuestionsHub() {
   const [questions, setQuestions] = React.useState([]);
@@ -10,10 +14,10 @@ export default function QuestionsHub() {
     const fetchUserQuestions = async () => {
       try {
         const response = await getAllUserQuestions();
-        setQuestions(response.additional); // Assuming response.additional contains the array of questions
+        setQuestions(response.additional);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching user questions:", error);
+        console.error('Error fetching user questions:', error);
         setLoading(false);
       }
     };
@@ -23,24 +27,27 @@ export default function QuestionsHub() {
   const handleVerify = async (questionsId) => {
     try {
       await verifyUserQuestion(questionsId);
-    
+      // Optionally update UI after verifying
     } catch (error) {
-      console.error("Error verifying question:", error);
+      console.error('Error verifying question:', error);
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteUserQuestion(id);
-      setQuestions((prevQuestions) => prevQuestions.filter((q) => q.id !== id));
+      setQuestions((prevQuestions) =>
+        prevQuestions.filter((q) => q.id !== id)
+      );
     } catch (error) {
-      console.error("Error deleting question:", error);
+      console.error('Error deleting question:', error);
     }
   };
 
   return (
     <div className="bg-white dark:bg-darkColor text-black dark:text-white min-h-screen py-10 px-6 sm:pl-72">
       <Alert />
+
       {/* Header */}
       <header className="flex justify-between items-center mb-8 border-b pb-4 border-darkColor/20">
         <h1 className="text-3xl font-bold">Questions Hub</h1>
@@ -49,9 +56,13 @@ export default function QuestionsHub() {
       {/* Questions List */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {loading ? (
-          <div className="col-span-full text-center text-lg">Loading questions...</div>
+          <div className="col-span-full text-center text-lg">
+            Loading questions...
+          </div>
         ) : questions.length === 0 ? (
-          <div className="col-span-full text-center text-lg">No questions found.</div>
+          <div className="col-span-full text-center text-lg">
+            No questions found.
+          </div>
         ) : (
           questions.map((question) => (
             <div
@@ -59,6 +70,17 @@ export default function QuestionsHub() {
               className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
             >
               <h2 className="text-xl font-semibold mb-2">{question.question}</h2>
+
+              {/* Course and Topic Info */}
+              <p className="text-gray-600 dark:text-gray-300 mb-2">
+                <span className="font-medium">Course: </span>
+                {question.course?.courseName || 'N/A'}
+              </p>
+              <p className="text-gray-600 dark:text-gray-300 mb-2">
+                <span className="font-medium">Topic: </span>
+                {question.topic?.title || 'N/A'}
+              </p>
+
               <p className="text-gray-600 dark:text-gray-300 mb-2">
                 <span className="font-medium">Answer: </span>
                 {question.answer || 'No answer yet'}
@@ -67,6 +89,7 @@ export default function QuestionsHub() {
                 <span className="font-medium">Asked by: </span>
                 {question.studentName || 'Unknown'}
               </p>
+
               <div className="flex gap-2 mb-2">
                 <span
                   className={`px-2 py-1 rounded text-sm ${
@@ -87,10 +110,12 @@ export default function QuestionsHub() {
                   {question.isVerified ? 'Verified' : 'Not Verified'}
                 </span>
               </div>
+
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                 <span className="font-medium">Created: </span>
                 {new Date(question.createdAt).toLocaleDateString()}
               </p>
+
               <div className="flex gap-2">
                 <button
                   onClick={() => handleVerify(question.id)}
