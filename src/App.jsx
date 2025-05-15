@@ -21,6 +21,9 @@ import Pricings from "./pages/Pricings";
 import Careers from "./pages/Careers";
 import MentorsMangement from "./pages/MentorsMangement";
 import QuestionsHub from "./pages/QuestionsHub";
+import Bounties from "./pages/Bounties";
+import BountySubmissions from "./pages/BountySubmissions";
+import BountyApplication from "./pages/BountyApplications";
 
 function App() {
   const isUser = localStorage.getItem("token");
@@ -75,6 +78,18 @@ function App() {
                    <Route
                     path="/control_center/questions_hub"
                     element={<QuestionsHub/>}
+                  />
+                   <Route
+                    path="/control_center/bounty_submissions/:bountyId"
+                    element={<BountySubmissions/>}
+                  />
+                   <Route
+                    path="/control_center/applications/:bountyId"
+                    element={<BountyApplication/>}
+                  />
+                    <Route
+                    path="/control_center/bounties"
+                    element={<Bounties/>}
                   />
                   <Route path="/dashboard/users" element={<Users />} />
                   <Route path="/website/faq" element={<FAQs />} />

@@ -250,6 +250,13 @@ export default function Sidebar() {
                 >
                  Questions Hub
                 </Link>
+                <Link
+                  to="/control_center/bounties"
+                  className="text-main p-2 rounded-md"
+                  onClick={() => { }}
+                >
+                 Bounties
+                </Link>
               </div>
             )}
           </div>
@@ -325,6 +332,8 @@ export default function Sidebar() {
               </div>
             )}
           </div>
+
+         
 
           {/* Users Dropdown */}
           <div className="relative">
