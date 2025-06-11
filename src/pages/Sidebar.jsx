@@ -186,10 +186,17 @@ export default function Sidebar() {
       </div>
 
       {/* ========= DESKTOP SIDEBAR ========= */}
-      <div
-        className={`hidden md:flex fixed top-0 left-0 h-full bg-green-50  text-darkColor dark:bg-darkBg dark:text-white  border-r-2 dark:border-darkColor font-poppins rounded-r-3xl transition-all duration-300 flex-col ${isSidebarOpen ? 'w-64' : 'w-16'
-          }`}
-      >
+     <div
+  className={`hidden md:flex fixed top-0 left-0 h-full
+    bg-green-50 text-darkColor dark:bg-darkBg dark:text-white
+    border-r-2 dark:border-darkColor
+    font-poppins rounded-r-3xl text-sm
+    transition-all duration-300
+    flex-col
+    ${isSidebarOpen ? 'w-64' : 'w-16'}
+    overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400`}
+>
+
         {/* Desktop Toggle Button inside Sidebar */}
         <div className="p-4">
           <button onClick={toggleSidebar} className="w-full">
@@ -205,7 +212,7 @@ export default function Sidebar() {
           {isSidebarOpen && (
             <img
               src={Logo}
-              className="h-auto w-[200px] transition-all duration-300"
+              className="h-auto w-[150px] transition-all duration-300"
               alt="Logo"
             />
           )}
