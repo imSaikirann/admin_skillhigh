@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from '../auth/axiosConfig';
 import Alert from '../components/Alert';
 import { useParams } from 'react-router-dom';
+import { useNavigateToBack } from '../utils/navigateUtils'
 
 export default function AddTopic() {
     const { courseId } = useParams(); // Corrected typo 'couresId' to 'courseId'
@@ -15,6 +16,7 @@ export default function AddTopic() {
     const [loading, setLoading] = useState(false);
     const [alertVisible, setAlertVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+  const redirectToBack = useNavigateToBack()
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -65,6 +67,15 @@ export default function AddTopic() {
 
     return (
         <div className="max-w-2xl mx-auto p-8 bg-white   dark:bg-darkColor dark:text-white border dark:border-darkColor rounded-lg font-poppins h-screen">
+           <div className="flex items-center justify-between mb-6">
+                   <button
+                     className="bg-main px-6 py-3 text-white rounded-md font-medium hover:underline flex items-center"
+                     onClick={() => redirectToBack()}
+                   >
+                     Back
+                   </button>
+           
+                 </div>
             <Alert
                 message={alertMessage}
                 isVisible={alertVisible}

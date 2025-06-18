@@ -10,6 +10,7 @@ export default function Pricings() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [features, setFeatures] = useState([]);
   const [featureName, setFeatureName] = useState('');
+  const [description, setDescription] = useState('');
   const [isIncluded, setIsIncluded] = useState(false);
   const [showAddPricingModal, setShowAddPricingModal] = useState(false); // State to control "Add Pricing" modal
 
@@ -43,13 +44,12 @@ export default function Pricings() {
   const addFeature = async () => {
     if (!featureName) return;
 
-    const newFeature = { name: featureName, isIncluded };
+    const newFeature = { name: featureName, description, isIncluded };
     try {
       const res = await axios.post(
         `/api/v1/pricings/addPricingFeatures/${selectedPlan.pricingId}`,
-        newFeature
+        newFeature,
       );
-      conssole.log(res)
       if (res.data.success) {
         // Refresh the features list after adding a new feature
         const updatedFeatures = await axios.get(`/api/v1/pricings/features/${selectedPlan.pricingId}`);
@@ -57,6 +57,7 @@ export default function Pricings() {
           setFeatures(updatedFeatures.data.features); // Update the features list
         }
         setFeatureName('');
+        setDescription('');
         setIsIncluded(false);
       }
     } catch (error) {
@@ -104,7 +105,7 @@ export default function Pricings() {
 
       {/* Modal for adding a new pricing plan */}
       {showAddPricingModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center dark:bg-darkColor ">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 className="text-2xl font-bold mb-4">Add New Pricing Plan</h2>
             <div className="mb-4">
@@ -165,8 +166,8 @@ export default function Pricings() {
       </div>
 
       {showModal && selectedPlan && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-11/12 sm:w-3/4 md:max-w-md max-h-screen overflow-auto">
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-11/12 sm:w-3/4 md:max-w-md max-h-screen overflow-auto dark:bg-darkColor">
       <h2 className="text-2xl font-bold mb-4">
         Features for {selectedPlan.pricingName}
       </h2>
@@ -180,6 +181,13 @@ export default function Pricings() {
           onChange={(e) => setFeatureName(e.target.value)}
           className="w-full border px-3 py-2 rounded-lg mb-2"
           placeholder="Feature name"
+        />
+          <input
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full border px-3 py-2 rounded-lg mb-2"
+          placeholder="Feature Description"
         />
         <div className="flex items-center mb-4">
           <input
