@@ -1,71 +1,73 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from '../auth/axiosConfig';
+import React, { useState, useEffect, useContext } from "react";
+import axios from "../auth/axiosConfig";
 
-import Spinner from '../components/Spinner';
-import Alert from '../components/Alert';
-import { useNavigateToBack } from '../utils/navigateUtils'
-import { AppContext } from '../store/StoreContext';
+import Spinner from "../components/Spinner";
+import Alert from "../components/Alert";
+import { useNavigateToBack } from "../utils/navigateUtils";
+import { AppContext } from "../store/StoreContext";
+import { addNewSale, fetchSales, removeCourseAccess } from "../services/userServices";
+import { fetchPricings } from "../services/pricingsService";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [showDropdown, setShowDropdown] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(7);
-  const { loading, setLoading,courses ,fetchCourses} = useContext(AppContext);
-  const redirectToBack = useNavigateToBack()
+  const [page, setPage] = useState(1);
+  const [pricings, setPricings] = useState([]);
+  const [salesCount, setSalesCount] = useState(0);
+
+  const limit = 10;
+  const totalPages = Math.ceil(salesCount / limit);
+
+  const { loading, setLoading, courses, fetchCourses } = useContext(AppContext);
+  const redirectToBack = useNavigateToBack();
 
   const [newUser, setNewUser] = useState({
-    email: '',
-    phoneNumber: '',
-    courseName: '',
-    amount: '',
+    id: "",
+    email: "",
+    phoneNumber: "",
+    courseName: "",
+    amount: "",
+    priceId: "",
+    isFullPayment: true,
   });
   const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState("");
 
-  async function fetchUsers() {
+  async function fetchUsers(page, search) {
     setLoading(true);
     try {
-      const res = await axios.get('/api/v1/purchase/getAllPurchases', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-      setUsers(res.data);
+      const res = await fetchSales(page, search);
+      setUsers(res.sales || []);
+      setSalesCount(res.totalCount || 0);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
   }
+
+  async function fetchCoursePricings() {
+    const res = await fetchPricings();
+    setPricings(res || []);
+  }
+
   useEffect(() => {
-    fetchCourses()
-    fetchUsers();
+    fetchCourses();
+    fetchCoursePricings();
   }, []);
 
-
-  const filteredUsers = users.filter(
-    (user) =>
-      user.courseName.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  useEffect(() => {
+    fetchUsers(page, search);
+  }, [page, search]);
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+    if (page < totalPages) setPage((prev) => prev + 1);
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+    if (page > 1) setPage((prev) => prev - 1);
   };
 
   const handleAddUser = async (e) => {
@@ -73,78 +75,83 @@ export default function Users() {
 
     try {
       if (newUser.id) {
-        const response = await axios.put(`/api/v1/purchase/updatePurchase/${newUser.id}`, {
-          email: newUser.email,
-          courseId: newUser.courseName,
-          amount: parseFloat(newUser.amount),
-          phoneNumber: newUser.phoneNumber,
-        }, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
+        const response = await axios.put(
+          `/api/v1/purchase/updatePurchase/${newUser.id}`,
+          {
+            email: newUser.email,
+            courseId: newUser.courseName,
+            amount: parseFloat(newUser.amount),
+            phoneNumber: newUser.phoneNumber,
+            isFullPayment: newUser.isFullPayment,
+          },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          }
+        );
 
         if (response) {
-
-          fetchUsers();
+          fetchUsers(page, search);
           setShowForm(false);
-          setNewUser({ email: '', phoneNumber: '', courseName: '', amount: '' });
+          resetUserForm();
         }
       } else {
-
-        const response = await axios.post('/api/v1/purchase/addPurchase', {
+         await addNewSale({
           email: newUser.email,
           courseId: newUser.courseName,
-          amount: parseFloat(newUser.amount),
+          priceId: newUser.priceId,
           phoneNumber: newUser.phoneNumber,
-        }, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          isFullPayment: newUser.isFullPayment,
         });
 
-        if (response) {
-          fetchUsers();
+      
+          fetchUsers(page, search);
           setShowForm(false);
-
-          setNewUser({ email: '', phoneNumber: '', courseName: '', amount: '' });
-          setAlertMessage(response.data.message)
-          setAlertVisible(true)
-        }
+          resetUserForm();
+        
       }
     } catch (error) {
       console.error("Error adding/editing user:", error);
     }
   };
 
+  const resetUserForm = () => {
+    setNewUser({
+      id: "",
+      email: "",
+      phoneNumber: "",
+      courseName: "",
+      amount: "",
+      priceId: "",
+      isFullPayment: true,
+    });
+  };
+
   const handleDelete = async (userId, courseId) => {
     try {
-      const res = await axios.delete(`/api/v1/purchase/deletePurchase/${userId}`, {
-        data: { courseId }, // Include `courseId` in the `data` field for DELETE requests
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-
-      setUsers(users.filter(user => user.id !== userId));
-      setAlertMessage(res.data.message)
-      setAlertVisible(true)
+      const res = await removeCourseAccess(userId, courseId);
+      setAlertMessage(res);
+      setAlertVisible(true);
+      fetchUsers(page, search);
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleEdit = (user) => {
-    console.log(user)
-    setNewUser({ ...user });
+    setNewUser({ ...user, id: user.id || "" });
     setShowForm(true);
   };
+
   const handleAlertClose = () => {
     setAlertVisible(false);
   };
+
   return (
     <div className="container mx-auto p-6 px-6 sm:pl-72 font-poppins h-screen">
       <div>
-        <Alert
-          message={alertMessage}
-          isVisible={alertVisible}
-          onClose={handleAlertClose}
-        />
+        <Alert message={alertMessage} isVisible={alertVisible} onClose={handleAlertClose} />
       </div>
+
       {/* Header Section */}
       <div className="flex items-center justify-between mb-6 ">
         <button
@@ -153,146 +160,170 @@ export default function Users() {
         >
           Back
         </button>
-
       </div>
 
-      <div className="mb-6 p-4 dark:bg-darkColor w-full max-w-auto text-secondary shadow rounded-md">
+      {/* Search & Stats */}
+      <div className="mb-6 p-4 dark:bg-darkColor w-full text-secondary shadow rounded-md">
         <div className="flex flex-col md:flex-row justify-between gap-4 items-center">
-          {/* Total Users */}
           <div className="text-lg font-semibold">
-            Total Users: <span className="text-main">{users.length}</span>
+            Total Students: <span className="text-main">{salesCount}</span>
           </div>
 
-          {/* Search Input */}
           <div className="w-full md:w-auto relative">
             <input
               type="text"
-              placeholder=" Search by email or course..."
+              placeholder="Search by email..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               className="w-full md:w-96 bg-gray-100 dark:bg-darkBg text-lightColor px-4 py-3 rounded-md shadow-sm focus:ring-2 focus:ring-main focus:outline-none transition duration-300 placeholder:text-gray-400"
             />
-            <button
-              onClick={() => setSearch('')}
-              className={` ${search.length > 0 ? "absolute" : "hidden"}   right-3 top-1/2 transform -translate-y-1/2 text-lightColor rounded-full hover:bg-opacity-80 transition`}
-            >
-              ✖
-            </button>
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-lightColor"
+              >
+                ✖
+              </button>
+            )}
           </div>
-
         </div>
       </div>
 
-
       <header className="flex justify-between items-center text-secondary mb-4">
-        <h1 className="text-3xl font-semibold">Users</h1>
-        <button
-          onClick={() => setShowForm(true)}
-          className="bg-main text-white px-4 py-3 rounded-md"
-        >
-          Add New User
+        <h1 className="text-3xl font-semibold">Students</h1>
+       <div className="flex flex-row gap-3">
+          <button onClick={() => fetchUsers(page,search)} className="bg-gray-800 text-white px-4 py-3 rounded-md">
+          Refresh
         </button>
+        <button onClick={() => setShowForm(true)} className="bg-main text-white px-4 py-3 rounded-md">
+          Add New Student
+        </button>
+       </div>
       </header>
 
       {/* Users Table */}
-      <div className="   ">
+      <div className="overflow-x-auto">
         {loading ? (
           <Spinner />
         ) : (
           <table className="w-full text-sm text-left bg-white dark:bg-darkBg text-secondary border dark:border-darkColor rounded-md shadow-md">
-          <thead className="text-xs text-dark dark:text-white h-12 uppercase bg-green-50 dark:bg-darkBg">
-            <tr>
-              <th className="px-6 py-3 border-b dark:border-darkColor">Email</th>
-              <th className="px-6 py-3 border-b dark:border-darkColor">Phone Number</th>
-              <th className="px-6 py-3 border-b dark:border-darkColor">Course Name</th>
-              <th className="px-6 py-3 border-b dark:border-darkColor">Price</th>
-              <th className="px-6 py-3 border-b dark:border-darkColor">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentUsers.length > 0 ? (
-              currentUsers.map((user, index) => (
-                <tr key={index} className=" bg-white text-darkColor dark:text-white dark:bg-darkColor border-b dark:border-dark last:border-none ">
-                  <td className="px-6 py-4">{user.email}</td>
-                  <td className="px-6 py-4">{user.phoneNumber}</td>
-                  <td className="px-6 py-4">{user.courseName}</td>
-                  <td className="px-6 py-4">{user.price}</td>
-                  <td className="px-6 py-4">
-                    <div className="relative">
-                      <button
-                        onClick={() => setShowDropdown(showDropdown === index ? null : index)}
-                        className="text-gray-400 hover:text-white"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                          <path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
-                          <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
-                        </svg>
-                      </button>
-                      {showDropdown === index && (
-                        <div className="absolute right-0 bottom-3 mt-2 w-32 bg-white border border-gray-300 shadow-lg rounded-md z-10">
-                          <button
-                            onClick={() => handleEdit(user)}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full text-left"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(user.id, user.courseId)}
-                            className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-200 w-full text-left"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+            <thead className="text-xs text-dark dark:text-white h-12 uppercase bg-green-50 dark:bg-darkBg sticky top-0 z-10">
+              <tr>
+                <th className="px-6 py-3 border-b">Email</th>
+                <th className="px-6 py-3 border-b">Phone Number</th>
+                <th className="px-6 py-3 border-b">Course Name</th>
+                <th className="px-6 py-3 border-b">Price</th>
+                <th className="px-6 py-3 border-b">Full Payment</th>
+                <th className="px-6 py-3 border-b">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.length > 0 ? (
+                users.map((user, index) => (
+                  <tr
+                    key={index}
+                    className="bg-white text-darkColor dark:text-white dark:bg-darkColor border-b hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                  >
+                    <td className="px-6 py-4">{user.email}</td>
+                    <td className="px-6 py-4">{user.phoneNumber}</td>
+                    <td className="px-6 py-4">{user.courseName}</td>
+                    <td className="px-6 py-4">{user.price}</td>
+                    <td className="px-6 py-4">{user.isFullPayment ? "Yes" : "No"}</td>
+                    <td className="px-6 py-4">
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowDropdown(showDropdown === index ? null : index)}
+                          className="text-gray-400 hover:text-main"
+                        >
+                          ⋮
+                        </button>
+                        {showDropdown === index && (
+                          <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-300 shadow-lg rounded-md z-20">
+                            <button
+                           
+                            
+                              onClick={() => handleEdit(user)}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full text-left"
+                            >
+                              Edit
+                            </button>
+                            <button
+                           
+                              onClick={() => handleDelete(user.userId, user.courseId)}
+                              className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-200 w-full text-left"
+                            >
+                              Remove Access
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="text-center py-4 text-gray-400">
+                    No users found
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="text-center py-4 text-gray-400">
-                  No users found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        
+              )}
+            </tbody>
+          </table>
         )}
       </div>
 
-      {/* Pagination Buttons */}
-      <div className="flex justify-between mt-4">
+      {/* Pagination */}
+      <div className="flex justify-center items-center mt-6 gap-4">
         <button
           onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-md  ${currentPage === 1 ? 'bg-gray-300' : 'bg-main text-white'}`}
+          disabled={page === 1}
+          className={`px-4 py-2 rounded-md border ${
+            page === 1
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-white text-main hover:bg-main hover:text-white transition"
+          }`}
         >
-          Previous
+          ◀ Prev
         </button>
-        <span className="text-sm text-gray-600">
-          Page {currentPage} of {totalPages}
+        <span className="text-sm text-gray-600 dark:text-gray-300">
+          Page <span className="font-semibold">{page}</span> of {totalPages || 1}
         </span>
         <button
           onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded-md ${currentPage === totalPages ? 'bg-gray-300' : 'bg-main text-white'}`}
+          disabled={page === totalPages || totalPages === 0}
+          className={`px-4 py-2 rounded-md border ${
+            page === totalPages || totalPages === 0
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-white text-main hover:bg-main hover:text-white transition"
+          }`}
         >
-          Next
+          Next ▶
         </button>
       </div>
 
+      {/* Modal Form */}
       {showForm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-darkColor bg-opacity-50">
-          <div className="bg-white dark:bg-darkBg dark:text-white p-6 rounded-md w-1/3">
-            <h2 className="text-2xl font-semibold mb-4">{newUser.id ? 'Edit User' : 'Add New User'}</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowForm(false)}
+          ></div>
+
+          <div className="relative bg-white dark:bg-darkBg dark:text-white p-6 rounded-xl shadow-xl w-full max-w-lg z-50">
+            <h2 className="text-2xl font-semibold mb-4">
+              {newUser.id ? "Edit User" : "Add New User"}
+            </h2>
             <form onSubmit={handleAddUser}>
               <input
                 type="email"
                 placeholder="Email"
                 value={newUser.email}
                 onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                className="w-full px-4 py-2 mb-3 border border-darkColor bg-white dark:bg-darkColor dark:text-white rounded-md"
+                className="w-full px-4 py-2 mb-3 border rounded-md dark:bg-darkColor dark:text-white"
                 required
               />
               <input
@@ -300,13 +331,23 @@ export default function Users() {
                 placeholder="Phone"
                 value={newUser.phoneNumber}
                 onChange={(e) => setNewUser({ ...newUser, phoneNumber: e.target.value })}
-                className="w-full px-4 py-2 mb-3 border border-darkColor bg-white dark:bg-darkColor dark:text-white rounded-md"
+                className="w-full px-4 py-2 mb-3 border rounded-md dark:bg-darkColor dark:text-white"
                 required
               />
+
+              <div className="flex items-center gap-2 mb-3">
+                <label className="text-sm">Full Payment:</label>
+                <input
+                  type="checkbox"
+                  checked={newUser.isFullPayment}
+                  onChange={(e) => setNewUser({ ...newUser, isFullPayment: e.target.checked })}
+                />
+              </div>
+
               <select
                 value={newUser.courseName}
                 onChange={(e) => setNewUser({ ...newUser, courseName: e.target.value })}
-                className="w-full px-4 py-2 mb-3 border border-darkColor bg-white dark:bg-darkColor dark:text-white rounded-md"
+                className="w-full px-4 py-2 mb-3 border rounded-md dark:bg-darkColor dark:text-white"
                 required
               >
                 <option value="">Select Course</option>
@@ -318,16 +359,17 @@ export default function Users() {
               </select>
 
               <select
-                value={newUser.amount}
-                onChange={(e) => {
-                  setNewUser({ ...newUser, amount: parseFloat(e.target.value) });
-                }}
-                className="w-full px-4 py-2 mb-3 border border-darkColor bg-white dark:bg-darkColor dark:text-white rounded-md"
+                value={newUser.priceId || ""}
+                onChange={(e) => setNewUser({ ...newUser, priceId: e.target.value })}
+                className="w-full px-4 py-2 mb-3 border rounded-md dark:bg-darkColor dark:text-white"
                 required
               >
-                <option value="">Select Amount</option>
-                <option value="4500">4500</option>
-                <option value="6500">6500</option>
+                <option value="">Select Pricing</option>
+                {pricings.map((pricing) => (
+                  <option key={pricing.id} value={pricing.id}>
+                    {pricing.name} - {pricing.price}
+                  </option>
+                ))}
               </select>
 
               <div className="flex justify-end">
@@ -339,7 +381,7 @@ export default function Users() {
                   Cancel
                 </button>
                 <button type="submit" className="bg-main text-white px-4 py-2 rounded-md">
-                  {newUser.id ? 'Save Changes' : 'Add User'}
+                  {newUser.id ? "Save Changes" : "Add User"}
                 </button>
               </div>
             </form>
