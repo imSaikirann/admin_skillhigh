@@ -24,6 +24,7 @@ import QuestionsHub from "./pages/QuestionsHub";
 import Bounties from "./pages/Bounties";
 import BountySubmissions from "./pages/BountySubmissions";
 import BountyApplication from "./pages/BountyApplications";
+import CourseTools from "./pages/CourseTools";
 
 function App() {
   const isUser = localStorage.getItem("token");
@@ -59,6 +60,7 @@ function App() {
                     element={<AddTopic />}
                   />
                   <Route path="/dashboard/topics/:courseId" element={<Topics />} />
+                  <Route path="/dashboard/course/tools/:courseId" element={<CourseTools />} />
                   <Route
                     path="/dashboard/departments"
                     element={<Departments />}

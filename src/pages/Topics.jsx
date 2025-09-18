@@ -109,6 +109,12 @@ export default function Topics() {
                     >
                         Modules
                     </button>
+                     <button
+                        className="bg-main text-white font-semibold py-2 px-4 rounded hover:bg-main-dark transition-colors w-full sm:w-auto"
+                        onClick={() => navigate(`/dashboard/course/tools/${courseId}`)}
+                    >
+                        Tools
+                    </button>
                 </div>
             </div>
 
