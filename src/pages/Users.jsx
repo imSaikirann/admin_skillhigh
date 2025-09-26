@@ -35,6 +35,9 @@ export default function Users() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
+  // 👇 NEW: filter state
+  const [filter, setFilter] = useState("paid"); // "paid" | "unpaid"
+
   async function fetchUsers(page, search) {
     setLoading(true);
     try {
@@ -95,7 +98,7 @@ export default function Users() {
           resetUserForm();
         }
       } else {
-         await addNewSale({
+        await addNewSale({
           email: newUser.email,
           courseId: newUser.courseName,
           priceId: newUser.priceId,
@@ -103,11 +106,9 @@ export default function Users() {
           isFullPayment: newUser.isFullPayment,
         });
 
-      
-          fetchUsers(page, search);
-          setShowForm(false);
-          resetUserForm();
-        
+        fetchUsers(page, search);
+        setShowForm(false);
+        resetUserForm();
       }
     } catch (error) {
       console.error("Error adding/editing user:", error);
@@ -145,6 +146,14 @@ export default function Users() {
   const handleAlertClose = () => {
     setAlertVisible(false);
   };
+
+  // 👇 NEW: filter users based on filter state
+  const filteredUsers = users?.filter((user) =>
+    filter === "paid" ? user.isFullPayment : !user.isFullPayment
+    
+  );
+
+
 
   return (
     <div className="container mx-auto p-6 px-6 sm:pl-72 font-poppins h-screen">
@@ -194,15 +203,35 @@ export default function Users() {
 
       <header className="flex justify-between items-center text-secondary mb-4">
         <h1 className="text-3xl font-semibold">Students</h1>
-       <div className="flex flex-row gap-3">
-          <button onClick={() => fetchUsers(page,search)} className="bg-gray-800 text-white px-4 py-3 rounded-md">
-          Refresh
-        </button>
-        <button onClick={() => setShowForm(true)} className="bg-main text-white px-4 py-3 rounded-md">
-          Add New Student
-        </button>
-       </div>
+        <div className="flex flex-row gap-3">
+          <button onClick={() => fetchUsers(page, search)} className="bg-gray-800 text-white px-4 py-3 rounded-md">
+            Refresh
+          </button>
+          <button onClick={() => setShowForm(true)} className="bg-main text-white px-4 py-3 rounded-md">
+            Add New Student
+          </button>
+        </div>
       </header>
+
+      {/* 👇 NEW: Filter Buttons */}
+      <div className="flex gap-3 mb-4">
+        <button
+          onClick={() => setFilter("paid")}
+          className={`px-4 py-2 rounded-md border ${
+            filter === "paid" ? "bg-main text-white" : "bg-white text-main"
+          }`}
+        >
+          Full Payment
+        </button>
+        <button
+          onClick={() => setFilter("unpaid")}
+          className={`px-4 py-2 rounded-md border ${
+            filter === "unpaid" ? "bg-main text-white" : "bg-white text-main"
+          }`}
+        >
+          Unpaid
+        </button>
+      </div>
 
       {/* Users Table */}
       <div className="overflow-x-auto">
@@ -221,8 +250,8 @@ export default function Users() {
               </tr>
             </thead>
             <tbody>
-              {users.length > 0 ? (
-                users.map((user, index) => (
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((user, index) => (
                   <tr
                     key={index}
                     className="bg-white text-darkColor dark:text-white dark:bg-darkColor border-b hover:bg-gray-50 dark:hover:bg-gray-700 transition"
@@ -231,7 +260,7 @@ export default function Users() {
                     <td className="px-6 py-4">{user.phoneNumber}</td>
                     <td className="px-6 py-4">{user.courseName}</td>
                     <td className="px-6 py-4">{user.price}</td>
-                    <td className="px-6 py-4">{user.isFullPayment ? "Yes" : "No"}</td>
+                    <td className="px-6 py-4">{user.isFullPayment ? "Paid ✅" : "Unpaid ❌"}</td>
                     <td className="px-6 py-4">
                       <div className="relative">
                         <button
@@ -243,15 +272,12 @@ export default function Users() {
                         {showDropdown === index && (
                           <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-300 shadow-lg rounded-md z-20">
                             <button
-                           
-                            
                               onClick={() => handleEdit(user)}
                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full text-left"
                             >
                               Edit
                             </button>
                             <button
-                           
                               onClick={() => handleDelete(user.userId, user.courseId)}
                               className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-200 w-full text-left"
                             >
@@ -276,7 +302,8 @@ export default function Users() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-6 gap-4">
+      {filter === "paid" && (
+        <div className="flex justify-center items-center mt-6 gap-4">
         <button
           onClick={handlePrevPage}
           disabled={page === 1}
@@ -302,7 +329,7 @@ export default function Users() {
         >
           Next ▶
         </button>
-      </div>
+      </div>)}
 
       {/* Modal Form */}
       {showForm && (
