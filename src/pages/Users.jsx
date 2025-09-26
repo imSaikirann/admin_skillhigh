@@ -284,7 +284,7 @@ const handleSaveDiscount = async (user, index) => {
           <th className="px-6 py-3 border-b">Course Name</th>
           <th className="px-6 py-3 border-b">Price</th>
           {/* Show Discount column only for unpaid users */}
-          {filter === "unpaid" && <th className="px-6 py-3 border-b">Discount Amount</th>}
+          {filter === "unpaid" && <th className="px-6 py-3 border-b">Remainaing Amount</th>}
           <th className="px-6 py-3 border-b">Full Payment</th>
           <th className="px-6 py-3 border-b">Actions</th>
         </tr>
@@ -307,7 +307,7 @@ const handleSaveDiscount = async (user, index) => {
   <td className="px-6 py-4 relative">
     <input
       type="number"
-      placeholder="Discount Amount"
+      placeholder="Remainaing  Amount"
       value={user.discountAmount || ""}
       onChange={(e) => {
         const updatedUsers = [...users];
