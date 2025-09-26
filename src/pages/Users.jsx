@@ -16,6 +16,8 @@ export default function Users() {
   const [page, setPage] = useState(1);
   const [pricings, setPricings] = useState([]);
   const [salesCount, setSalesCount] = useState(0);
+ 
+const [showSaveButton, setShowSaveButton] = useState(null);
 
   const limit = 10;
   const totalPages = Math.ceil(salesCount / limit);
@@ -153,6 +155,42 @@ export default function Users() {
     
   );
 
+const handleSaveDiscount = async (user, index) => {
+  try {
+    if (!user.id) {
+      alert("Purchase ID is missing for this user!");
+      return;
+    }
+
+    await axios.put(
+      `/api/v2/sales/discount-price`,
+      {
+        discountAmount: Number(user.discountAmount), // ensure number type
+        purchaseId: user.purchaseId || user.id, // use the correct ID
+      },
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+
+    setShowSaveButton(null);
+    alert("Discount updated successfully!");
+  } catch (err) {
+    console.error(err);
+    if (err.response?.data?.errors) {
+      alert(
+        "Failed to update discount: " +
+          err.response.data.errors.map((e) => e.message).join(", ")
+      );
+    } else {
+      alert("Failed to update discount");
+    }
+  }
+
+
+};
+
+
 
 
   return (
@@ -235,71 +273,111 @@ export default function Users() {
 
       {/* Users Table */}
       <div className="overflow-x-auto">
-        {loading ? (
-          <Spinner />
-        ) : (
-          <table className="w-full text-sm text-left bg-white dark:bg-darkBg text-secondary border dark:border-darkColor rounded-md shadow-md">
-            <thead className="text-xs text-dark dark:text-white h-12 uppercase bg-green-50 dark:bg-darkBg sticky top-0 z-10">
-              <tr>
-                <th className="px-6 py-3 border-b">Email</th>
-                <th className="px-6 py-3 border-b">Phone Number</th>
-                <th className="px-6 py-3 border-b">Course Name</th>
-                <th className="px-6 py-3 border-b">Price</th>
-                <th className="px-6 py-3 border-b">Full Payment</th>
-                <th className="px-6 py-3 border-b">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((user, index) => (
-                  <tr
-                    key={index}
-                    className="bg-white text-darkColor dark:text-white dark:bg-darkColor border-b hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+  {loading ? (
+    <Spinner />
+  ) : (
+    <table className="w-full text-sm text-left bg-white dark:bg-darkBg text-secondary border dark:border-darkColor rounded-md shadow-md">
+      <thead className="text-xs text-dark dark:text-white h-12 uppercase bg-green-50 dark:bg-darkBg sticky top-0 z-10">
+        <tr>
+          <th className="px-6 py-3 border-b">Email</th>
+          <th className="px-6 py-3 border-b">Phone Number</th>
+          <th className="px-6 py-3 border-b">Course Name</th>
+          <th className="px-6 py-3 border-b">Price</th>
+          {/* Show Discount column only for unpaid users */}
+          {filter === "unpaid" && <th className="px-6 py-3 border-b">Discount Amount</th>}
+          <th className="px-6 py-3 border-b">Full Payment</th>
+          <th className="px-6 py-3 border-b">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user, index) => (
+            <tr
+              key={user.id || index}
+              className="bg-white text-darkColor dark:text-white dark:bg-darkColor border-b hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+            >
+              <td className="px-6 py-4">{user.email}</td>
+              <td className="px-6 py-4">{user.phoneNumber}</td>
+              <td className="px-6 py-4">{user.courseName}</td>
+              <td className="px-6 py-4">{user.price}</td>
+
+              {/* Only show discount if filter is unpaid */}
+            {filter === "unpaid" && (
+  <td className="px-6 py-4 relative">
+    <input
+      type="number"
+      placeholder="Discount Amount"
+      value={user.discountAmount || ""}
+      onChange={(e) => {
+        const updatedUsers = [...users];
+        updatedUsers[index].discountAmount = e.target.value;
+        setUsers(updatedUsers);
+      }}
+      onFocus={() => setShowSaveButton(index)} // Track focused row
+      className="w-full bg-gray-100 dark:bg-darkBg text-lightColor px-2 py-1 rounded-md shadow-sm focus:ring-2 focus:ring-main focus:outline-none transition duration-300"
+    />
+
+    {/* Show Save button only when this row is focused */}
+    {showSaveButton === index && (
+      <button
+        onClick={() => handleSaveDiscount(user, index)}
+        className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-main text-white px-2 py-1 rounded-md text-sm"
+      >
+        Save
+      </button>
+    )}
+  </td>
+)}
+
+
+
+
+              <td className="px-6 py-4">{user.isFullPayment ? "Paid ✅" : "Unpaid ❌"}</td>
+
+              <td className="px-6 py-4">
+                <div className="relative">
+                  <button
+                    onClick={() => setShowDropdown(showDropdown === index ? null : index)}
+                    className="text-gray-400 hover:text-main"
                   >
-                    <td className="px-6 py-4">{user.email}</td>
-                    <td className="px-6 py-4">{user.phoneNumber}</td>
-                    <td className="px-6 py-4">{user.courseName}</td>
-                    <td className="px-6 py-4">{user.price}</td>
-                    <td className="px-6 py-4">{user.isFullPayment ? "Paid ✅" : "Unpaid ❌"}</td>
-                    <td className="px-6 py-4">
-                      <div className="relative">
-                        <button
-                          onClick={() => setShowDropdown(showDropdown === index ? null : index)}
-                          className="text-gray-400 hover:text-main"
-                        >
-                          ⋮
-                        </button>
-                        {showDropdown === index && (
-                          <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-300 shadow-lg rounded-md z-20">
-                            <button
-                              onClick={() => handleEdit(user)}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full text-left"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(user.userId, user.courseId)}
-                              className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-200 w-full text-left"
-                            >
-                              Remove Access
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="text-center py-4 text-gray-400">
-                    No users found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                    ⋮
+                  </button>
+                  {showDropdown === index && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-300 shadow-lg rounded-md z-20">
+                      <button
+                        onClick={() => handleEdit(user)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full text-left"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user.userId, user.courseId)}
+                        className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-200 w-full text-left"
+                      >
+                        Remove Access
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td
+              colSpan={filter === "unpaid" ? 7 : 6}
+              className="text-center py-4 text-gray-400"
+            >
+              No users found
+            </td>
+          </tr>
         )}
-      </div>
+      </tbody>
+    </table>
+  )}
+</div>
+
 
       {/* Pagination */}
       {filter === "paid" && (
